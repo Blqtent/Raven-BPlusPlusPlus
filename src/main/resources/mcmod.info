@@ -1,8 +1,8 @@
 [
 {
-  "modid": "keystrokesmod",
-  "name": "KeystrokesMod",
-  "description": "Shows your keystrokes ingame. | Updated and modified by spiderfrog | V5 by Yario & Extazz | Ported by OFP.",
+  "modid": "FancyKetstrokes",
+  "name": "FancyKetstrokes",
+  "description": "Shows your keystrokes ingame",
   "version": "KMV5",
   "url": "https://www.youtube.com/ofpmedia",
   "updateUrl": "",
