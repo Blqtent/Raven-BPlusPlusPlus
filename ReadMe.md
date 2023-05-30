@@ -1,6 +1,6 @@
 Raven B4
 
-This Client Is Free, Build From Raven B++, Better than Vape V5, Bypasses Anti-Chetas Like Intave , Polar, Grim, Vulcan't
+This Client Is Free, Built On Top Of Raven B++, Better than Vape V5, Bypasses Anti-Chetas Like Intave , Polar, Grim, Vulcan't
 
 How To Setup The Workspace Yourself?                                                                                                                                                                                                   
 Download The SRC,
