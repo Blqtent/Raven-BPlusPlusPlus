@@ -8,10 +8,10 @@ Put The SRC In Some Random Folder,
 Open CMD In The Folder's Path & Type 'gradlew setupDecompWorkspace && gradlew idea'
 Open The Project In Intellij (Not Eclipse)
 
-FAQ                                                                                                                                                                                                                         
-[Q] gradle is not working/crashing/throwing errors
-[Ans] Well... Just Take The L And Do Not Try To Setup The Workspace Again Coz Doing It Requires Atleast One Working Brain Cell And Cope Harder.
+FAQ:                                                                                                                                                                                                                         
+[Q] Gradle is not working/crashing/throwing errors
+[A] Make an Issue on this github repo and provide a screenshot of the error.
 
 [Q] omG iS tHiS clIEnT a rAT?!?!?!111!!?!??!!
-[Ans] No I Would Never Do Such A Thing As Putting Rats In Minecraft utility mods (real btw not joking 100%)
+[A] No I Would Never Do Such A Thing As Putting Rats In Minecraft utility mods (real btw not joking 100%)
 
