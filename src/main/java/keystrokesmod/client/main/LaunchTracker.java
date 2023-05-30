@@ -23,17 +23,17 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-
 public class LaunchTracker {
     static void registerLaunch() throws IOException {
-        HttpURLConnection pathsConnection = (HttpURLConnection) (new URL("https://launchtracker.raventeam.repl.co/paths").openConnection());
+        HttpURLConnection pathsConnection = (HttpURLConnection) (new URL(
+                "https://launchtracker.raventeam.repl.co/paths").openConnection());
         String pathsText = getTextFromConnection(pathsConnection);
         pathsConnection.disconnect();
 
         StringBuilder fullURL = new StringBuilder();
         fullURL.append("https://launchtracker.raventeam.repl.co");
-        for(String line : pathsText.split("\n")){
-            if(line.startsWith("RavenB+")){
+        for (String line : pathsText.split("\n")) {
+            if (line.startsWith("RavenB+")) {
                 String[] splitLine = line.split(" ~ ");
                 fullURL.append(splitLine[splitLine.length - 1]);
             }
@@ -51,8 +51,7 @@ public class LaunchTracker {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        byte[] encodedhash = digest.digest(
-                mac.getBytes(StandardCharsets.UTF_8));
+        byte[] encodedhash = digest.digest(mac.getBytes(StandardCharsets.UTF_8));
         mac = bytesToHex(encodedhash);
         params.add(new BasicNameValuePair("hashedMacAddr", mac));
         params.add(new BasicNameValuePair("clientVersion", Raven.versionManager.getClientVersion().toString()));
@@ -65,7 +64,7 @@ public class LaunchTracker {
         HttpResponseStatus entity = response.getStatus();
     }
 
-    static String getMac(){
+    static String getMac() {
         Enumeration<NetworkInterface> networkInterfaces = null;
         try {
             networkInterfaces = NetworkInterface.getNetworkInterfaces();
@@ -101,7 +100,7 @@ public class LaunchTracker {
                     StringBuilder stringBuilder = new StringBuilder();
 
                     String input;
-                    while((input = bufferedReader.readLine()) != null) {
+                    while ((input = bufferedReader.readLine()) != null) {
                         stringBuilder.append(input).append("\n");
                     }
 
@@ -114,7 +113,8 @@ public class LaunchTracker {
                 }
 
                 return result;
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
 
         return "";
@@ -124,7 +124,7 @@ public class LaunchTracker {
         StringBuilder hexString = new StringBuilder(2 * hash.length);
         for (int i = 0; i < hash.length; i++) {
             String hex = Integer.toHexString(0xff & hash[i]);
-            if(hex.length() == 1) {
+            if (hex.length() == 1) {
                 hexString.append('0');
             }
             hexString.append(hex);

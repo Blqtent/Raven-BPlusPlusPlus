@@ -14,16 +14,18 @@ out
 .idea
 
 # gradle
-build
+build/*
+!build/libs
 .gradle
 
 # other
 eclipse
 run
+.shelf
 
 
-
-keystrokes/
 logs/
 saves/
 mc/
+jh
+src/main/java/keystrokesmod/client/module/modules/combat/KillAura.java

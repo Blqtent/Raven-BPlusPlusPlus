@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 public class Trajectories extends Module {
     private final TickSetting preferSlot;
     private final SliderSetting hotbarSlotPreference;
+
     public Trajectories() {
         super("Trajectories", ModuleCategory.hotkey);
 
@@ -27,7 +28,7 @@ public class Trajectories extends Module {
         if (preferSlot.isToggled()) {
             int preferedSlot = (int) hotbarSlotPreference.getInput() - 1;
 
-            if(checkSlot(preferedSlot)) {
+            if (checkSlot(preferedSlot)) {
                 mc.thePlayer.inventory.currentItem = preferedSlot;
                 this.disable();
                 return;
@@ -35,9 +36,9 @@ public class Trajectories extends Module {
         }
 
         for (int slot = 0; slot <= 8; slot++) {
-            if(checkSlot(slot)) {
-                if(mc.thePlayer.inventory.currentItem != slot){
-                mc.thePlayer.inventory.currentItem = slot;
+            if (checkSlot(slot)) {
+                if (mc.thePlayer.inventory.currentItem != slot) {
+                    mc.thePlayer.inventory.currentItem = slot;
                 } else {
                     return;
                 }
@@ -51,6 +52,7 @@ public class Trajectories extends Module {
     public static boolean checkSlot(int slot) {
         ItemStack itemInSlot = mc.thePlayer.inventory.getStackInSlot(slot);
 
-        return itemInSlot != null && (itemInSlot.getItem() instanceof ItemSnowball || itemInSlot.getItem() instanceof ItemEgg || itemInSlot.getItem() instanceof ItemFishingRod);
+        return itemInSlot != null && (itemInSlot.getItem() instanceof ItemSnowball
+                || itemInSlot.getItem() instanceof ItemEgg || itemInSlot.getItem() instanceof ItemFishingRod);
     }
 }

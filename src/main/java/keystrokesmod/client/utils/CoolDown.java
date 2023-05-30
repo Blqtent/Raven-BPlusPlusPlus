@@ -3,34 +3,44 @@ package keystrokesmod.client.utils;
 public class CoolDown {
     private long start;
     private long lasts;
+    private boolean checkedFinish;
 
-    public CoolDown(long lasts){
+    public CoolDown(long lasts) {
         this.lasts = lasts;
     }
 
-    public void start(){
+    public void start() {
         this.start = System.currentTimeMillis();
-        //Utils.Player.sendMessageToSelf("Time started " + lasts/1000);
+        checkedFinish = false;
     }
 
-    public boolean hasFinished(){
-        if(System.currentTimeMillis() >= start + lasts) {
-            //Utils.Player.sendMessageToSelf("Time finished");
+    public boolean hasFinished() {
+        return System.currentTimeMillis() >= (start + lasts);
+    }
+
+    public boolean firstFinish() {
+        if ((System.currentTimeMillis() >= (start + lasts)) && !checkedFinish) {
+            checkedFinish = true;
             return true;
         }
         return false;
     }
 
-    public void setCooldown(long time){
-        //Utils.Player.sendMessageToSelf("Set cooldown to " + time);
+    public void setCooldown(long time) {
         this.lasts = time;
     }
 
-    public long getElapsedTime(){
-        return System.currentTimeMillis() - this.start;
+    public long getCooldownTime() {
+        return lasts;
     }
 
-    public long getTimeLeft(){
-        return lasts - (System.currentTimeMillis() - start);
+    public long getElapsedTime() {
+        long et = System.currentTimeMillis() - this.start;
+        return et > lasts ? lasts : et;
+    }
+
+    public long getTimeLeft() {
+        long tl = lasts - (System.currentTimeMillis() - start);
+        return tl < 0 ? 0 : tl;
     }
 }

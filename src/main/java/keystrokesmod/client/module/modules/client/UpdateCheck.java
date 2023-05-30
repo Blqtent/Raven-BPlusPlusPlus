@@ -1,13 +1,13 @@
 package keystrokesmod.client.module.modules.client;
 
+import com.google.common.eventbus.Subscribe;
+import keystrokesmod.client.event.impl.GameLoopEvent;
 import keystrokesmod.client.main.Raven;
 import keystrokesmod.client.module.Module;
 import keystrokesmod.client.module.setting.impl.DescriptionSetting;
 import keystrokesmod.client.module.setting.impl.TickSetting;
 import keystrokesmod.client.utils.Utils;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import keystrokesmod.client.utils.version.Version;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -36,13 +36,14 @@ public class UpdateCheck extends Module {
             Version latest = Raven.versionManager.getLatestVersion();
             Version current = Raven.versionManager.getClientVersion();
             if (latest.isNewerThan(current)) {
-                Utils.Player.sendMessageToSelf("The current version or Raven B+ is outdated. Visit https://github.com/Kopamed/Raven-bPLUS to download the latest version.");
-                Utils.Player.sendMessageToSelf("https://github.com/Kopamed/Raven-bPLUS");
+                Utils.Player.sendMessageToSelf(
+                        "The current version or Raven B++ is outdated. Visit https://github.com/K-ov/Raven-bPLUS/tree/stable/build/libs to download the latest version.");
+                Utils.Player.sendMessageToSelf("https://github.com/K-ov/Raven-bPLUS/tree/stable/build/libs");
             }
 
             if (current.isNewerThan(latest)) {
                 Utils.Player.sendMessageToSelf("You are on a beta build of raven");
-                Utils.Player.sendMessageToSelf("https://github.com/Kopamed/Raven-bPLUS");
+                Utils.Player.sendMessageToSelf("https://github.com/K-ov/Raven-bPLUS");
             } else {
                 Utils.Player.sendMessageToSelf("You are on the latest public version!");
             }
@@ -50,7 +51,7 @@ public class UpdateCheck extends Module {
             if (copyToClipboard.isToggled())
                 if (Utils.Client.copyToClipboard(Raven.downloadLocation))
                     Utils.Player.sendMessageToSelf("Successfully copied download link to clipboard!");
-                    Utils.Player.sendMessageToSelf(Raven.sourceLocation);
+            Utils.Player.sendMessageToSelf(Raven.sourceLocation);
 
             if (openLink.isToggled()) {
                 try {
@@ -59,7 +60,8 @@ public class UpdateCheck extends Module {
                     Utils.Client.openWebpage(new URL(Raven.downloadLocation));
                 } catch (MalformedURLException bruh) {
                     bruh.printStackTrace();
-                    Utils.Player.sendMessageToSelf("&cFailed to open page! Please report this bug in Raven b+'s discord");
+                    Utils.Player
+                            .sendMessageToSelf("&cFailed to open page! Please report this bug in Raven b++'s discord");
                 }
             }
 
@@ -67,14 +69,14 @@ public class UpdateCheck extends Module {
         };
     }
 
-    @SubscribeEvent
-    public void onPlayerTick(TickEvent.PlayerTickEvent e) {
+    @Subscribe
+    public void onGameLoop(GameLoopEvent e) {
         if (f == null) {
             f = executor.submit(task);
-            Utils.Player.sendMessageToSelf("Update check started !");
+            Utils.Player.sendMessageToSelf("Update check started!");
         } else if (f.isDone()) {
             f = executor.submit(task);
-            Utils.Player.sendMessageToSelf("Update check started !");
+            Utils.Player.sendMessageToSelf("Update check started!");
         }
     }
 }

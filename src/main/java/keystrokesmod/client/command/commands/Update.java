@@ -1,6 +1,5 @@
 package keystrokesmod.client.command.commands;
 
-
 import keystrokesmod.client.clickgui.raven.Terminal;
 import keystrokesmod.client.command.Command;
 import keystrokesmod.client.main.Raven;
@@ -12,7 +11,7 @@ import java.net.URL;
 
 public class Update extends Command {
     public Update() {
-        super("update", "Assists you in updating the client", 0, 0, new String[] {}, new String[] {"upgrade"});
+        super("update", "Assists you in updating the client", 0, 0, new String[] {}, new String[] { "upgrade" });
     }
 
     @Override
@@ -30,7 +29,7 @@ public class Update extends Command {
                 Terminal.print("Opened page successfully!");
             } catch (MalformedURLException e) {
                 e.printStackTrace();
-                Terminal.print("Failed to open page! Please report this bug in Raven b+'s discord!");
+                Terminal.print("Failed to open page! Please report this bug in Raven b++'s discord!");
 
             }
         } else {

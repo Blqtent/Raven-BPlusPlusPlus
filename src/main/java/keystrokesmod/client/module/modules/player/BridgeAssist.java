@@ -1,13 +1,14 @@
 package keystrokesmod.client.module.modules.player;
 
+import com.google.common.eventbus.Subscribe;
+
+import keystrokesmod.client.event.impl.Render2DEvent;
 import keystrokesmod.client.main.Raven;
-import keystrokesmod.client.module.*;
+import keystrokesmod.client.module.Module;
 import keystrokesmod.client.module.setting.impl.DescriptionSetting;
 import keystrokesmod.client.module.setting.impl.SliderSetting;
 import keystrokesmod.client.module.setting.impl.TickSetting;
 import keystrokesmod.client.utils.Utils;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class BridgeAssist extends Module {
     private final TickSetting setLook;
@@ -54,8 +55,8 @@ public class BridgeAssist extends Module {
         super.onEnable();
     }
 
-    @SubscribeEvent
-    public void onRenderTick(TickEvent.RenderTickEvent e) {
+    @Subscribe
+    public void onRenderTick(Render2DEvent e) {
         if (!Utils.Player.isPlayerInGame()) {
             return;
         }

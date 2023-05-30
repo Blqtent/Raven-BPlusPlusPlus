@@ -1,6 +1,5 @@
 package keystrokesmod.keystroke;
 
-import keystrokesmod.client.main.ClientConfig;
 import keystrokesmod.client.main.Raven;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -10,25 +9,20 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-@Mod(
-   modid = "keystrokesmod",
-   name = "KeystrokesMod",
-   version = "KMV5",
-   acceptedMinecraftVersions = "[1.8.9]",
-   clientSideOnly = true
-)
+@Mod(modid = "keystrokesmod", name = "KeystrokesMod", version = "KMV5", acceptedMinecraftVersions = "[1.8.9]", clientSideOnly = true)
 
 public class KeyStrokeMod {
     private static KeyStroke keyStroke;
-    private static KeyStrokeRenderer keyStrokeRenderer = new KeyStrokeRenderer();
-    private static boolean isKeyStrokeConfigGuiToggled = false;
+    private static final KeyStrokeRenderer keyStrokeRenderer = new KeyStrokeRenderer();
+    private static boolean isKeyStrokeConfigGuiToggled;
+
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         ClientCommandHandler.instance.registerCommand(new KeyStrokeCommand());
         MinecraftForge.EVENT_BUS.register(new KeyStrokeRenderer());
         MinecraftForge.EVENT_BUS.register(this);
-        ClientConfig.applyKeyStrokeSettingsFromConfigFile();
         Raven.init();
+        Raven.clientConfig.applyKeyStrokeSettingsFromConfigFile();
     }
 
     public static KeyStroke getKeyStroke() {
@@ -44,7 +38,7 @@ public class KeyStrokeMod {
     }
 
     @SubscribeEvent
-    public void onTick(TickEvent.ClientTickEvent e){
+    public void onTick(TickEvent.ClientTickEvent e) {
         if (isKeyStrokeConfigGuiToggled) {
             isKeyStrokeConfigGuiToggled = false;
             Minecraft.getMinecraft().displayGuiScreen(new KeyStrokeConfigGui());

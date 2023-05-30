@@ -1,181 +1,231 @@
-
 package keystrokesmod.client.clickgui.raven.components;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+import org.lwjgl.opengl.GL11;
 
 import keystrokesmod.client.clickgui.raven.Component;
 import keystrokesmod.client.main.Raven;
 import keystrokesmod.client.module.Module;
 import keystrokesmod.client.module.modules.client.GuiModule;
-import net.minecraft.client.gui.FontRenderer;
-import org.lwjgl.opengl.GL11;
+import keystrokesmod.client.utils.CoolDown;
+import keystrokesmod.client.utils.RenderUtils;
+import keystrokesmod.client.utils.Utils;
+import keystrokesmod.client.utils.font.FontUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Iterator;
+public class CategoryComponent extends Component {
+    public ArrayList<ModuleComponent> modulesInCategory = new ArrayList<>();
+    private ModuleComponent openComponent;
+    public Module.ModuleCategory categoryName;
+    public boolean categoryOpened, inUse, dragging;
+    public boolean visable = true;
+    public int scrollheight, dragX, dragY, heightCheck, deltaHeight, prevHeight, bottomX, bottomY;
+    public double theta, velo = 0.1;
+    public int aHeight = 13;
 
-public class CategoryComponent {
-   public ArrayList<Component> modulesInCategory = new ArrayList<>();
-   public Module.ModuleCategory categoryName;
-   private boolean categoryOpened;
-   private int width;
-   private int y;
-   private int x;
-   private final int bh;
-   public boolean inUse;
-   public int xx;
-   public int yy;
-   public boolean n4m = false;
-   public String pvp;
-   public boolean pin = false;
-   private int chromaSpeed;
-   private double marginY, marginX;
+    private CoolDown timer = new CoolDown(500);
+    public float tPercent;
 
-   public CategoryComponent(Module.ModuleCategory category) {
-      this.categoryName = category;
-      this.width = 92;
-      this.x = 5;
-      this.y = 5;
-      this.bh = 13;
-      this.xx = 0;
-      this.categoryOpened = false;
-      this.inUse = false;
-      this.chromaSpeed = 3;
-      int tY = this.bh + 3;
-      this.marginX = 80;
-      this.marginY = 4.5;
+    private final int marginX = 80
+                    ,marginY = 3;
 
-      for(Iterator<Module> var3 = Raven.moduleManager.getModulesInCategory(this.categoryName).iterator(); var3.hasNext(); tY += 16) {
-         Module mod = var3.next();
-         ModuleComponent b = new ModuleComponent(mod, this, tY);
-         this.modulesInCategory.add(b);
-      }
+    private final float gravity = 0.9f,
+                    friction = 0.7f;
 
-   }
 
-   public ArrayList<Component> getModules() {
-      return this.modulesInCategory;
-   }
+    public CategoryComponent(Module.ModuleCategory category) {
+        categoryName = category;
+        setDimensions(92, aHeight);
+        Raven.moduleManager.getModulesInCategory(category).forEach(module -> modulesInCategory.add(new ModuleComponent(module, this)));
+        modulesInCategory.sort(Comparator.comparingDouble(module -> FontUtil.normal.getStringWidth(module.mod.getName())));
+        Collections.reverse(modulesInCategory);
+    }
 
-   public void setX(int n) {
-      this.x = n;
-      if(Raven.clientConfig != null){
-         Raven.clientConfig.saveConfig();
-      }
-   }
+    public void initGui() {
+        bottomX = x + (width/2);
+        bottomY = y + (height/2);
+    }
 
-   public void setY(int y) {
-      this.y = y;
-      if(Raven.clientConfig != null){
-         Raven.clientConfig.saveConfig();
-      }
-   }
+    @Override
+    public void guiClosed() {
+        heightCheck = 0;
+    }
 
-   public void mousePressed(boolean d) {
-      this.inUse = d;
-   }
+    @Override
+    public void setCoords(int x, int y) {
+        super.setCoords(x, y);
+        if (Raven.clientConfig != null)
+            Raven.clientConfig.saveConfig();
+    }
 
-   public boolean p() {
-      return this.pin;
-   }
+    public void setOpened(boolean on) {
+        categoryOpened = on;
+        if (Raven.clientConfig != null)
+            Raven.clientConfig.saveConfig();
+    }
 
-   public void cv(boolean on) {
-      this.pin = on;
-   }
-
-   public boolean isOpened() {
-      return this.categoryOpened;
-   }
-
-   public void setOpened(boolean on) {
-      this.categoryOpened = on;
-      if(Raven.clientConfig != null){
-         Raven.clientConfig.saveConfig();
-      }
-   }
-
-   public void rf(FontRenderer renderer) {
-      this.width = 92;
-      if (!this.modulesInCategory.isEmpty() && this.categoryOpened) {
-         int categoryHeight = 0;
-
-         Component moduleRenderManager;
-         for(Iterator moduleInCategoryIterator = this.modulesInCategory.iterator(); moduleInCategoryIterator.hasNext(); categoryHeight += moduleRenderManager.getHeight()) {
-            moduleRenderManager = (Component)moduleInCategoryIterator.next();
-         }
-
-         //drawing the background for every module in the category
-         net.minecraft.client.gui.Gui.drawRect(this.x - 1, this.y, this.x + this.width + 1, this.y + this.bh + categoryHeight + 4, (new Color(0, 0, 0, (int)(GuiModule.backgroundOpacity.getInput()/100 * 255))).getRGB());
-      }
-
-      if(GuiModule.categoryBackground.isToggled())
-         TickComponent.renderMain((float)(this.x - 2), (float)this.y, (float)(this.x + this.width + 2), (float)(this.y + this.bh + 3), -1);
-      renderer.drawString(this.n4m ? this.pvp : this.categoryName.name(), (float)(this.x + 2), (float)(this.y + 4), Color.getHSBColor((float)(System.currentTimeMillis() % (7500L / (long)this.chromaSpeed)) / (7500.0F / (float)this.chromaSpeed), 1.0F, 1.0F).getRGB(), false);
-      //renderer.drawString(this.n4m ? this.pvp : this.categoryName.name(), (float)(this.x + 2), (float)(this.y + 4), ay.astolfoColorsDraw(10, 14), false);
-      if (!this.n4m) {
-         GL11.glPushMatrix();
-         //Opened/closed unicode... :yes: :holsum: :evil:
-         renderer.drawString(this.categoryOpened ? "-" : "+", (float)(this.x + marginX), (float)((double)this.y + marginY), Color.white.getRGB(), false);
-         GL11.glPopMatrix();
-         if (this.categoryOpened && !this.modulesInCategory.isEmpty()) {
-            Iterator var5 = this.modulesInCategory.iterator();
-
-            while(var5.hasNext()) {
-               Component c2 = (Component)var5.next();
-               c2.draw();
+    @Override
+    public void draw(int mouseX, int mouseY) {
+        if (!visable)
+            return;
+        Minecraft mc = Minecraft.getMinecraft();
+        //smooth height moving
+        int newHeight = 0;
+        if(categoryOpened) {
+            if(openComponent != null) {
+                newHeight = openComponent.getHeight();
+            } else {
+                for(ModuleComponent moduleComponent : modulesInCategory)
+                    newHeight += moduleComponent.getHeight();
             }
-         }
+        }
 
-      }
-   }
+        if(heightCheck != newHeight) {
+            prevHeight = heightCheck;
+            deltaHeight = newHeight - heightCheck;
+            heightCheck = newHeight;
+            timer.setCooldown(500);
+            timer.start();
+        }
+        tPercent = Utils.Client.smoothPercent(timer.getElapsedTime() / (float) timer.getCooldownTime());
+        setDimensions(width, aHeight + prevHeight + (int) (deltaHeight * tPercent));
 
-   public void r3nd3r() {
-      int o = this.bh + 3;
+        //dragging bit
+        if(dragging)
+            setCoords(mouseX + dragX, mouseY + dragY);
 
-      Component c;
-      for(Iterator var2 = this.modulesInCategory.iterator(); var2.hasNext(); o += c.getHeight()) {
-         c = (Component)var2.next();
-         c.setComponentStartAt(o);
-      }
+        //swing bit VERY BROKEN
+        GL11.glPushMatrix();
+        if(GuiModule.isSwingToggled() && GuiModule.isSwingToggled()) { //to make it not work
+            int topX = x + (width/2),
+                topY = y + (height/2);
 
-   }
+            double d = Math.sqrt(Math.pow((topX - bottomX), 2) + Math.pow((topY - bottomY), 2));
+            theta = Math.acos(Math.toRadians(
+                            ((2 * Math.pow(height,2)) + (Math.pow(d, 2)))
+                            /
+                            (2 * height * height)
+                            ));
 
-   public int getX() {
-      return this.x;
-   }
+            velo = velo + (theta * gravity);
+            double ntheta = theta + (velo * friction);
+            bottomX = x - (int) (Math.sin(Math.toRadians(ntheta)) * height);
+            bottomY = y - (int) (Math.cos(Math.toRadians(ntheta)) * height);
+        }
 
-   public int getY() {
-      return this.y;
-   }
+        // background
+        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        RenderUtils.glScissor(x - 1, y, x2 + 1, y2 + 1);
+        int bgColor = openComponent != null ? GuiModule.getCategoryBackgroundRGB() : GuiModule.getSettingBackgroundRGB();
+        if (!GuiModule.isRoundedToggled()) Gui.drawRect(x, y, x2, y2, bgColor);
+        else RenderUtils.drawRoundedRect(x, y, x2, y2, 12, bgColor);
 
-   public int getWidth() {
-      return this.width;
-   }
+        // drawing modules
+        if (categoryOpened || (tPercent < 1))
+            if(openComponent != null) {
+                openComponent.setCoords(x, y + aHeight);
+                openComponent.draw(mouseX, mouseY);
+            } else {
+                int yOffset = 0;
+                for(ModuleComponent module : modulesInCategory) {
+                    module.setCoords(x, y + aHeight + yOffset);
+                    module.draw(mouseX, mouseY);
+                    yOffset += module.getHeight();
+                }
+            }
 
-   public void up(int x, int y) {
-      if (this.inUse) {
-         this.setX(x - this.xx);
-         this.setY(y - this.yy);
-      }
+        // boarder
+        if (GuiModule.isBoarderToggled()) {
+            if(isMouseOver(mouseX, mouseY)) {
+                if (!GuiModule.isRoundedToggled()) Gui.drawRect(x, y, x2, y2, GuiModule.getCategoryOutlineColor2());
+                else RenderUtils.drawRoundedOutline(x, y, x2, y2, 12, 3, GuiModule.getCategoryOutlineColor2());
+            } else if (!GuiModule.isRoundedToggled()) Gui.drawRect(x, y, x2, y2, GuiModule.getCategoryOutlineColor1());
+            else RenderUtils.drawRoundedOutline(x, y, x2, y2, 12, 3, GuiModule.getCategoryOutlineColor1());
+            GlStateManager.resetColor();
+        }
 
-   }
+        // category name
+        if (GuiModule.useCustomFont()) FontUtil.two.drawSmoothString(categoryName.getName(), (float) (x + 2), (float) (y + 4), GuiModule.getCategoryNameRGB());
+        else mc.fontRendererObj.drawString(categoryName.getName(), (float) (x + 2), (float) (y + 4),GuiModule.getCategoryBackgroundRGB(), false);
 
-   public boolean i(int x, int y) {
-      return x >= this.x + 92 - 13 && x <= this.x + this.width && (float)y >= (float)this.y + 2.0F && y <= this.y + this.bh + 1;
-   }
+        // +/- bit
+        int red = (int) (tPercent * 255);
+        int green = 255 - red;
+        final int colour = new Color(red, green, 0).getRGB();
+        mc.fontRendererObj.drawString(categoryOpened ? "-" : "+", x + marginX, y + marginY, colour, false);
 
-   public boolean mousePressed(int x, int y) {
-      return x >= this.x + 77 && x <= this.x + this.width - 6 && (float)y >= (float)this.y + 2.0F && y <= this.y + this.bh + 1;
-   }
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        GL11.glPopMatrix();
+    }
 
-   public boolean insideArea(int x, int y) {
-      return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.bh;
-   }
+    @Override
+    public void scroll(float ss) {
+        if (openComponent != null)
+            openComponent.scroll(ss);
+    }
 
-   public String getName() {
-      return String.valueOf(modulesInCategory);
-   }
+    @Override
+    public void clicked(int x, int y, int button) {
+        if (overExpandButton(x, y)) {
+            setOpened(!categoryOpened);
+            return;
+        } if (overName(x, y)) {
+            dragX = this.x - x;
+            dragY = this.y - y;
+            dragging = true;
+            return;
+        }
+        if(openComponent == null)
+            for(ModuleComponent module : modulesInCategory) {
+                if(module.mouseDown(x, y, button))
+                    return;
+            }
+        else
+            openComponent.mouseDown(x, y, button);
+    }
 
-   public void setLocation(int parseInt, int parseInt1) {
-      this.x = parseInt;
-      this.y = parseInt1;
-   }
+    @Override
+    public void mouseReleased(int x, int y, int button) {
+        dragging = false;
+        modulesInCategory.forEach(module -> module.mouseReleased(x, y, button));
+    }
+
+    @Override
+    public void keyTyped(char t, int k) {
+        if(openComponent == null)
+            return;
+        openComponent.keyTyped(t,k);
+    }
+
+
+    public void updateModules() {
+        modulesInCategory.clear();
+        Raven.moduleManager.getModulesInCategory(categoryName).forEach(module -> modulesInCategory.add(new ModuleComponent(module, this)));
+        modulesInCategory.sort(Comparator.comparingDouble(module -> FontUtil.normal.getStringWidth(module.mod.getName())));
+        Collections.reverse(modulesInCategory);
+    }
+
+    public boolean overExpandButton(int mouseX, int mouseY) {
+        return (mouseX > (x + marginX)) && (mouseX < (x + width)) && (mouseY > y) && (mouseY < (y + aHeight));
+    }
+
+    public boolean overName(int mouseX, int mouseY) {
+        return ((mouseX > (x)) && (mouseX < (x2)) && (mouseY > y) && (mouseY < (y + aHeight)));
+    }
+
+
+    public void setOpenModule(ModuleComponent component) {
+        openComponent = component;
+    }
+
+    public ModuleComponent getOpenModule() {
+        return openComponent;
+    }
+
 }

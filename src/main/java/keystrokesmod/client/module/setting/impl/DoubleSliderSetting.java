@@ -1,12 +1,17 @@
 package keystrokesmod.client.module.setting.impl;
 
-import com.google.gson.JsonObject;
-import keystrokesmod.client.clickgui.raven.Component;
-import keystrokesmod.client.clickgui.raven.components.ModuleComponent;
-import keystrokesmod.client.module.setting.Setting;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
+import com.google.gson.JsonObject;
+
+import keystrokesmod.client.clickgui.kv.KvComponent;
+import keystrokesmod.client.clickgui.kv.components.KvDoubleSliderComponent;
+import keystrokesmod.client.clickgui.raven.Component;
+import keystrokesmod.client.clickgui.raven.components.DoubleSliderComponent;
+import keystrokesmod.client.clickgui.raven.components.ModuleComponent;
+import keystrokesmod.client.clickgui.raven.components.SettingComponent;
+import keystrokesmod.client.module.setting.Setting;
 
 public class DoubleSliderSetting extends Setting {
     private final String name;
@@ -17,7 +22,8 @@ public class DoubleSliderSetting extends Setting {
 
     private final double defaultValMin, defaultValMax;
 
-    public DoubleSliderSetting(String settingName, double defaultValueMin, double defaultValueMax, double min, double max, double intervals) {
+    public DoubleSliderSetting(String settingName, double defaultValueMin, double defaultValueMax, double min,
+            double max, double intervals) {
         super(settingName);
         this.name = settingName;
         this.valMin = defaultValueMin;
@@ -29,7 +35,8 @@ public class DoubleSliderSetting extends Setting {
         this.defaultValMax = valMax;
     }
 
-    public String getName() {
+    @Override
+	public String getName() {
         return this.name;
     }
 
@@ -55,7 +62,7 @@ public class DoubleSliderSetting extends Setting {
 
     @Override
     public void applyConfigFromJson(JsonObject data) {
-        if(!data.get("type").getAsString().equals(getSettingType()))
+        if (!data.get("type").getAsString().equals(getSettingType()))
             return;
 
         setValueMax(data.get("valueMax").getAsDouble());
@@ -70,6 +77,7 @@ public class DoubleSliderSetting extends Setting {
     public double getInputMin() {
         return round(this.valMin, 2);
     }
+
     public double getInputMax() {
         return round(this.valMax, 2);
     }
@@ -84,13 +92,13 @@ public class DoubleSliderSetting extends Setting {
 
     public void setValueMin(double n) {
         n = correct(n, this.min, this.valMax);
-        n = (double)Math.round(n * (1.0D / this.interval)) / (1.0D / this.interval);
+        n = (double) Math.round(n * (1.0D / this.interval)) / (1.0D / this.interval);
         this.valMin = n;
     }
 
     public void setValueMax(double n) {
         n = correct(n, this.valMin, this.max);
-        n = (double)Math.round(n * (1.0D / this.interval)) / (1.0D / this.interval);
+        n = (double) Math.round(n * (1.0D / this.interval)) / (1.0D / this.interval);
         this.valMax = n;
     }
 
@@ -101,12 +109,20 @@ public class DoubleSliderSetting extends Setting {
     }
 
     public static double round(double val, int p) {
-        if (p < 0) {
-            return 0.0D;
-        } else {
-            BigDecimal bd = new BigDecimal(val);
-            bd = bd.setScale(p, RoundingMode.HALF_UP);
-            return bd.doubleValue();
-        }
+        if (p < 0)
+			return 0.0D;
+		BigDecimal bd = new BigDecimal(val);
+		bd = bd.setScale(p, RoundingMode.HALF_UP);
+		return bd.doubleValue();
+    }
+
+	@Override
+	public Class<? extends KvComponent> getComponentType() {
+		return KvDoubleSliderComponent.class;
+	}
+
+    @Override
+    public Class<? extends SettingComponent> getRavenComponentType() {
+        return DoubleSliderComponent.class;
     }
 }

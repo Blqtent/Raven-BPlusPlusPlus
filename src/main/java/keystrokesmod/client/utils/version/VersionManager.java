@@ -9,10 +9,10 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class VersionManager {
-    private final String versionFilePath = "/assets/keystrokes/version";
-    private final String branchFilePath = "/assets/keystrokes/branch";
-    private final String versionUrl = "https://raw.githubusercontent.com/Kopamed/Raven-bPLUS/main/src/main/resources/assets/keystrokes/version";
-    private final String branchUrl = "https://raw.githubusercontent.com/Kopamed/Raven-bPLUS/main/src/main/resources/assets/keystrokes/branch";
+	private final String versionFilePath = "/assets/keystrokesmod/version";
+	private final String branchFilePath = "/assets/keystrokesmod/branch";
+    private final String versionUrl = "https://raw.githubusercontent.com/K-ov/Raven-bPLUS/stable/src/main/resources/assets/keystrokesmod/version";
+    private final String branchUrl = "https://raw.githubusercontent.com/K-ov/Raven-bPLUS/stable/src/main/resources/assets/keystrokesmod/branch";
 
     private Version latestVersion;
     private Version clientVersion;
@@ -60,7 +60,7 @@ public class VersionManager {
         this.latestVersion = new Version(version, branch, branchCommit);
     }
 
-    private void createClientVersion(){
+    private void createClientVersion() {
         String version = "1.0.0";
         String branch = "";
         int branchCommit = 0;
@@ -78,16 +78,17 @@ public class VersionManager {
         branch = line[0];
         try {
             branchCommit = Integer.parseInt(line[1]);
-        } catch (NumberFormatException ignored){}
+        } catch (NumberFormatException ignored) {
+        }
 
         this.clientVersion = new Version(version, branch, branchCommit);
     }
 
-    public Version getClientVersion(){
+    public Version getClientVersion() {
         return clientVersion;
     }
 
-    public Version getLatestVersion(){
+    public Version getLatestVersion() {
         return latestVersion;
     }
 }
