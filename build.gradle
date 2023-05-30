@@ -102,6 +102,7 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+    rename "(.+_at.cfg)", "META-INF/\$1"
 }
 
 
@@ -127,6 +128,7 @@ jar {
     manifest {
         attributes(
                 'MixinConfigs': 'mixins.keystrokesmod.json',
+                'FMLAT': 'ravenMCP_at.cfg',
                 'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
                 'TweakOrder': 0,
                 "FMLCorePlugin": "keystrokesmod.client.mixin.MixinLoader",
