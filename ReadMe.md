@@ -5,7 +5,7 @@ This Client Is Free, Built On Top Of Raven B++, Better than Vape V5, Bypasses An
 How To Setup The Workspace Yourself?                                                                                                                                                                                                   
 Download The SRC,
 Put The SRC In Some Random Folder,
-Open CMD In The Folder's Path & Type " gradlew --debug setupDevWorkspace idea genIntellijRuns build "
+Open CMD In The Folder's Path & Type " gradlew SetupDecompWorkspace && build"
 Open The Project In Intellij (Not Eclipse)
 
 FAQ:                                                                                                                                                                                                                         
