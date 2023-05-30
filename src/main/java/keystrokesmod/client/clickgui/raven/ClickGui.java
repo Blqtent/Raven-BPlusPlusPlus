@@ -72,24 +72,16 @@ public class ClickGui extends GuiScreen {
         Version clientVersion = Raven.versionManager.getClientVersion();
         Version latestVersion = Raven.versionManager.getLatestVersion();
 
-        drawRect(0, 0, this.width, this.height, (int) (this.aR.getValueFloat(0.0F, 0.7F, 2) * 255.0F) << 24);
+        drawRect(0, 0, this.width, this.height, (int)(this.aR.getValueFloat(0.0F, 0.7F, 2) * 255.0F) << 24);
         int quarterScreenHeight = this.height / 4;
         int halfScreenWidth = this.width / 2;
         int w_c = 30 - this.aT.getValueInt(0, 30, 3);
-        this.drawCenteredString(this.fontRendererObj, "r", (halfScreenWidth + 1) - w_c, quarterScreenHeight - 25,
-                Utils.Client.rainbowDraw(2L, 1500L));
-        this.drawCenteredString(this.fontRendererObj, "a", halfScreenWidth - w_c, quarterScreenHeight - 15,
-                Utils.Client.rainbowDraw(2L, 1200L));
-        this.drawCenteredString(this.fontRendererObj, "v", halfScreenWidth - w_c, quarterScreenHeight - 5,
-                Utils.Client.rainbowDraw(2L, 900L));
-        this.drawCenteredString(this.fontRendererObj, "e", halfScreenWidth - w_c, quarterScreenHeight + 5,
-                Utils.Client.rainbowDraw(2L, 600L));
-        this.drawCenteredString(this.fontRendererObj, "n", halfScreenWidth - w_c, quarterScreenHeight + 15,
-                Utils.Client.rainbowDraw(2L, 300L));
-        this.drawCenteredString(this.fontRendererObj, "b", halfScreenWidth + 1 + w_c, quarterScreenHeight + 25,
-                Utils.Client.rainbowDraw(2L, 0L));
-        this.drawCenteredString(this.fontRendererObj, "+ +", halfScreenWidth + 1 + w_c, quarterScreenHeight + 30,
-                Utils.Client.rainbowDraw(2L, 0L));
+        this.drawCenteredString(this.fontRendererObj, "r", halfScreenWidth + 1 - w_c, quarterScreenHeight - 25, Utils.Client.rainbowDraw(2L, 1500L));
+        this.drawCenteredString(this.fontRendererObj, "a", halfScreenWidth - w_c, quarterScreenHeight - 15, Utils.Client.rainbowDraw(2L, 1200L));
+        this.drawCenteredString(this.fontRendererObj, "v", halfScreenWidth - w_c, quarterScreenHeight - 5, Utils.Client.rainbowDraw(2L, 900L));
+        this.drawCenteredString(this.fontRendererObj, "e", halfScreenWidth - w_c, quarterScreenHeight + 5, Utils.Client.rainbowDraw(2L, 600L));
+        this.drawCenteredString(this.fontRendererObj, "n", halfScreenWidth - w_c, quarterScreenHeight + 15, Utils.Client.rainbowDraw(2L, 300L));
+        this.drawCenteredString(this.fontRendererObj, "b4", halfScreenWidth + 1 + w_c, quarterScreenHeight + 30, Utils.Client.rainbowDraw(2L, 0L));
 
         float speed = 4890;
 
