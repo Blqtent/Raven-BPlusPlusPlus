@@ -9,9 +9,9 @@ import keystrokesmod.client.module.setting.impl.DescriptionSetting;
 import keystrokesmod.client.module.setting.impl.SliderSetting;
 import keystrokesmod.client.module.setting.impl.TickSetting;
 import keystrokesmod.client.utils.Utils;
+import net.minecraft.util.MathHelper;
 
 public class BridgeAssist extends Module {
-    private final TickSetting setLook;
     private final TickSetting onSneak;
     private final TickSetting workWithSafeWalk;
     private final SliderSetting waitFor;
@@ -32,14 +32,11 @@ public class BridgeAssist extends Module {
 
     public BridgeAssist() {
         super("Bridge Assist", ModuleCategory.player);
-        DescriptionSetting goodAdvice;
-        this.registerSetting(goodAdvice = new DescriptionSetting("Best with fastplace, not autoplace"));
-        this.registerSetting(waitFor = new SliderSetting("Wait time (ms)", 500, 0, 5000, 25));
-        this.registerSetting(setLook = new TickSetting("Set look pos", true));
+        this.registerSetting(waitFor = new SliderSetting("Wait time (ms)", 70, 0, 200, 1));
         this.registerSetting(onSneak = new TickSetting("Work only when sneaking", true));
-        this.registerSetting(workWithSafeWalk= new TickSetting("Work with safewalk", false));
+        this.registerSetting(workWithSafeWalk= new TickSetting("Work with safewalk", true));
         this.registerSetting(assistRange = new SliderSetting("Assist range", 10.0D, 1.0D, 40.0D, 1.0D));
-        this.registerSetting(glideTime = new SliderSetting("Glide speed", 500, 1, 201, 5));
+        this.registerSetting(glideTime = new SliderSetting("Glide speed", 4, 1, 100, 1));
         this.registerSetting(assistMode = new SliderSetting("Value", 1.0D, 1.0D, 4.0D, 1.0D));
         this.registerSetting(assistModeDesc = new DescriptionSetting("Mode: GodBridge"));
     }
@@ -147,7 +144,7 @@ public class BridgeAssist extends Module {
                 if (godbridgePos[0] >= (pitch - range) && godbridgePos[0] <= (pitch + range)) {
                     for (int k = 1; k < godbridgePos.length; k++) {
                         if (godbridgePos[k] >= (yaw - range) && godbridgePos[k] <= (yaw + range)) {
-                            aimAt(godbridgePos[0], godbridgePos[k], fuckedYaw, fuckedPitch);
+                            aimAt(godbridgePos[0], godbridgePos[k], fuckedYaw, fuckedPitch,glideTime.getInput());
                             this.waitingForAim = false;
                             return;
                         }
@@ -159,7 +156,7 @@ public class BridgeAssist extends Module {
                 if (moonwalkPos[0] >= (pitch - range) && moonwalkPos[0] <= (pitch + range)) {
                     for (int k = 1; k < moonwalkPos.length; k++) {
                         if (moonwalkPos[k] >= (yaw - range) && moonwalkPos[k] <= (yaw + range)) {
-                            aimAt(moonwalkPos[0], moonwalkPos[k], fuckedYaw, fuckedPitch);
+                            aimAt(moonwalkPos[0], moonwalkPos[k], fuckedYaw, fuckedPitch,glideTime.getInput());
                             this.waitingForAim = false;
                             return;
                         }
@@ -170,7 +167,7 @@ public class BridgeAssist extends Module {
                 if (breezilyPos[0] >= (pitch - range) && breezilyPos[0] <= (pitch + range)) {
                     for (int k = 1; k < breezilyPos.length; k++) {
                         if (breezilyPos[k] >= (yaw - range) && breezilyPos[k] <= (yaw + range)) {
-                            aimAt(breezilyPos[0], breezilyPos[k], fuckedYaw, fuckedPitch);
+                            aimAt(breezilyPos[0], breezilyPos[k], fuckedYaw, fuckedPitch,glideTime.getInput());
                             this.waitingForAim = false;
                             return;
                         }
@@ -181,7 +178,7 @@ public class BridgeAssist extends Module {
                 if (normalPos[0] >= (pitch - range) && normalPos[0] <= (pitch + range)) {
                     for (int k = 1; k < normalPos.length; k++) {
                         if (normalPos[k] >= (yaw - range) && normalPos[k] <= (yaw + range)) {
-                            aimAt(normalPos[0], normalPos[k], fuckedYaw, fuckedPitch);
+                            aimAt(normalPos[0], normalPos[k], fuckedYaw, fuckedPitch,glideTime.getInput());
                             this.waitingForAim = false;
                             return;
                         }
@@ -191,10 +188,32 @@ public class BridgeAssist extends Module {
         this.waitingForAim = false;
     }
 
-    public void aimAt(float pitch, float yaw, float fuckedYaw, float fuckedPitch){
-       if(setLook.isToggled()) {
-               mc.thePlayer.rotationPitch = pitch + ((int)fuckedPitch/360) * 360;
-               mc.thePlayer.rotationYaw = yaw;
-        }
+    public void aimAt(float pitch, float yaw, float fuckedYaw, float fuckedPitch,double speed){
+        float[] gcd = getGCDRotations(new float[]{yaw,pitch + ((int)fuckedPitch/360) * 360},new float[]{mc.thePlayer.prevRotationYaw,mc.thePlayer.prevRotationPitch});
+        float cappedYaw = maxAngleChange(mc.thePlayer.prevRotationYaw,gcd[0], (float) speed);
+        float cappedPitch = maxAngleChange(mc.thePlayer.prevRotationPitch,gcd[1], (float) speed);
+        mc.thePlayer.rotationPitch = cappedPitch;
+        mc.thePlayer.rotationYaw = cappedYaw;
+    }
+    private double getGCD() {
+        final float sens = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
+        final float pow = sens * sens * sens * 8.0F;
+        return pow * 0.15D;
+    }
+
+    private float[] getGCDRotations(final float[] rotations, final float[] prevRots) {
+        final float yawDif = rotations[0] - prevRots[0];
+        final float pitchDif = rotations[1] - prevRots[1];
+        final double gcd = getGCD();
+
+        rotations[0] -= yawDif % gcd;
+        rotations[1] -= pitchDif % gcd;
+        return rotations;
+    }
+    private float maxAngleChange(final float prev, final float now, final float maxTurn) {
+        float dif = MathHelper.wrapAngleTo180_float(now - prev);
+        if (dif > maxTurn) dif = maxTurn;
+        if (dif < -maxTurn) dif = -maxTurn;
+        return prev + dif;
     }
 }
