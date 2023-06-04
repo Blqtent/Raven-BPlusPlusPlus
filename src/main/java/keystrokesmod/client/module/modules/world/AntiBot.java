@@ -13,7 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-
+import static keystrokesmod.client.utils.Utils.Player.isPlayerInGame;
 import java.util.ArrayList;
 
 //Taken straight from Quantum coz i don't wanna code the same thing twice and also im lazy
