@@ -77,43 +77,6 @@ public class AntiBot extends Module {
                 return true;
             }
 
-            // illegal name checks
-            if(n.startsWith("CIT-")) return true;
-            if(n.equals("Empty")) return true;
-            if(n.contains(" ")) return true;
-            if(n.contains("<"))return true;
-            if(n.contains(">"))return true;
-            if(n.contains("#"))return true;
-            if(n.contains("+"))return true;
-            if(n.contains("&"))return true;
-            if(n.contains("/"))return true;
-            if(n.contains("("))return true;
-            if(n.contains(")"))return true;
-            if(n.contains("}"))return true;
-            if(n.contains("@"))return true;
-            if(n.contains("%"))return true;
-            if(n.contains(";"))return true;
-            if(n.contains("\n"))return true;
-            if(n.contains("^"))return true;
-            if(n.contains("{"))return true;
-            if(n.contains("'"))return true;
-            if(n.contains("*"))return true;
-            if(n.contains("~"))return true;
-            if(n.contains("$"))return true;
-            if(n.contains("["))return true;
-            if(n.contains("]"))return true;
-            if(n.contains(":")) return true;
-            if(n.contains("-")) return true;
-            if(n.contains("!")) return true;
-            if(n.contains("?")) return true;
-            if(n.contains("=")) return true;
-            if(n.contains("§")) return true;
-            if(n.length() < 3) return true;
-
-            // goofy checks
-            if(!en.canBePushed()) return true;
-            if(en.isRiding()) return true;
-
             if (n.length() == 10) {
                 int num = 0;
                 int let = 0;

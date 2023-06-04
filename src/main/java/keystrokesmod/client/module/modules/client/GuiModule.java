@@ -231,58 +231,58 @@ public class GuiModule extends Module {
                 false //swing
                 ), */
         Vape( // name
-                true, false, true, true, // showGradientEnabled - showGradientDisabled - useCustomFont -
-                CNColor.STATIC, // just leave this
-                in -> 0xFFFFFFFE, // categoryNameRGB
-                in -> 0x99808080, // settingBackgroundRGB
-                in -> 0x99808080, // categoryBackgroundRGB
-                in -> -12876693, // enabledTopRGB
-                in -> -12876693, // enabledBottomRGB
-                in -> 0xFFFFFFFE, // enabledTextRGB
-                in -> 0xFF000000, // disabledTopRGB
-                in -> 0xFF000000, // disabledBottomRGB
-                in -> 0xFFFFFFFE, // disabledTextRGB
-                in -> 0x99808080, // backgroundRGB
-                true, //rounded
-                true, //swing
-                false, //boarder
-                in -> -12876693,
-                in -> -12876693,
-                in -> Utils.Client.otherAstolfoColorsDraw(in, 10)
-        ),
+                        true, false, true, true, // showGradientEnabled - showGradientDisabled - useCustomFont -
+                        CNColor.STATIC, // just leave this
+                        in -> 0xFFFFFFFE, // categoryNameRGB
+                        in -> 0x99808080, // settingBackgroundRGB
+                        in -> 0x99808080, // categoryBackgroundRGB
+                        in -> -12876693, // enabledTopRGB
+                        in -> -12876693, // enabledBottomRGB
+                        in -> 0xFFFFFFFE, // enabledTextRGB
+                        in -> 0xFF000000, // disabledTopRGB
+                        in -> 0xFF000000, // disabledBottomRGB
+                        in -> 0xFFFFFFFE, // disabledTextRGB
+                        in -> 0x99808080, // backgroundRGB
+                        true, //rounded
+                        true, //swing
+                        false, //boarder
+                        in -> -12876693,
+                        in -> -12876693,
+                        in -> Utils.Client.otherAstolfoColorsDraw(in, 10)
+                        ),
 
         PlusPlus( // name
-                true, false, true, true, // showGradientEnabled - showGradientDisabled - useCustomFont -
-                CNColor.STATIC, // just leave this
-                in -> 0xFFFFFFFE, // categoryNameRGB
-                in -> -15001318, // settingBackgroundRGB
-                in -> -15001318, // categoryBackgroundRGB
-                in -> Utils.Client.rainbowDraw(2, in), // enabledTopRGB
-                in -> Utils.Client.rainbowDraw(2, in), // enabledBottomRGB
-                in -> 0xFF000000, // enabledTextRGB
-                in -> 0xFF000000, // disabledTopRGB
-                in -> 0xFF000000, // disabledBottomRGB
-                in -> 0xFFFFFFFE, // disabledTextRGB
-                in -> 0xFF808080, // backgroundRGB
-                true, //rounded
-                true, //swing
-                true, //boarder
-                in -> 0xFFFFFFFE,
-                in -> Utils.Client.astolfoColorsDraw(in, 10),
-                in -> Utils.Client.otherAstolfoColorsDraw(in, 10)
-        );
+                        true, false, true, true, // showGradientEnabled - showGradientDisabled - useCustomFont -
+                        CNColor.STATIC, // just leave this
+                        in -> 0xFFFFFFFE, // categoryNameRGB
+                        in -> -15001318, // settingBackgroundRGB
+                        in -> -15001318, // categoryBackgroundRGB
+                        in -> Utils.Client.rainbowDraw(2, in), // enabledTopRGB
+                        in -> Utils.Client.rainbowDraw(2, in), // enabledBottomRGB
+                        in -> 0xFF000000, // enabledTextRGB
+                        in -> 0xFF000000, // disabledTopRGB
+                        in -> 0xFF000000, // disabledBottomRGB
+                        in -> 0xFFFFFFFE, // disabledTextRGB
+                        in -> 0xFF808080, // backgroundRGB
+                        true, //rounded
+                        true, //swing
+                        true, //boarder
+                        in -> 0xFFFFFFFE,
+                        in -> Utils.Client.astolfoColorsDraw(in, 10),
+                        in -> Utils.Client.otherAstolfoColorsDraw(in, 10)
+                        );
 
         public boolean showGradientEnabled, showGradientDisabled, useCustomFont, categoryBackground, roundedCorners, swing, boarder;
         public ColorM categoryNameRGB, settingBackgroundRGB, categoryBackgroundRGB, enabledTopRGB, enabledBottomRGB,
-                enabledTextRGB, disabledTopRGB, disabledBottomRGB, disabledTextRGB, backgroundRGB, boarderColor, categoryOutlineColor, categoryOutlineColor2;
+        enabledTextRGB, disabledTopRGB, disabledBottomRGB, disabledTextRGB, backgroundRGB, boarderColor, categoryOutlineColor, categoryOutlineColor2;
         public CNColor cnColor;
 
         private Preset(
-                boolean showGradientEnabled, boolean showGradientDisabled, boolean useCustomFont,
-                boolean categoryBackground, CNColor cnColor, ColorM categoryNameRGB, ColorM settingBackgroundRGB,
-                ColorM categoryBackgroundRGB, ColorM enabledTopRGB, ColorM enabledBottomRGB, ColorM enabledTextRGB,
-                ColorM disabledTopRGB, ColorM disabledBottomRGB, ColorM disabledTextRGB, ColorM backgroundRGB,
-                boolean roundedCorners, boolean swing, boolean boarder, ColorM boarderColor, ColorM categoryOutlineColor, ColorM categoryOutlineColor2) {
+                        boolean showGradientEnabled, boolean showGradientDisabled, boolean useCustomFont,
+                        boolean categoryBackground, CNColor cnColor, ColorM categoryNameRGB, ColorM settingBackgroundRGB,
+                        ColorM categoryBackgroundRGB, ColorM enabledTopRGB, ColorM enabledBottomRGB, ColorM enabledTextRGB,
+                        ColorM disabledTopRGB, ColorM disabledBottomRGB, ColorM disabledTextRGB, ColorM backgroundRGB,
+                        boolean roundedCorners, boolean swing, boolean boarder, ColorM boarderColor, ColorM categoryOutlineColor, ColorM categoryOutlineColor2) {
             this.showGradientEnabled = showGradientEnabled;
             this.showGradientDisabled = showGradientDisabled;
             this.useCustomFont = useCustomFont;

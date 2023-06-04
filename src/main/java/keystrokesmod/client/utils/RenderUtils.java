@@ -4,14 +4,9 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
-import javax.swing.text.html.parser.Entity;
 
-import net.minecraft.entity.EntityLivingBase;
 import org.lwjgl.opengl.GL11;
 
 import keystrokesmod.client.main.Raven;
@@ -21,8 +16,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
-
-import static keystrokesmod.client.utils.Utils.mc;
 
 public class RenderUtils {
 
@@ -121,17 +114,6 @@ public class RenderUtils {
         for (int i = originalRotation; i <= finalRotation; i += 3)
             GL11.glVertex2d(x + (radius * -pn) + (Math.sin((i * 3.141592653589793) / 180.0) * radius * pn), y + (radius * pn2) + (Math.cos((i * 3.141592653589793) / 180.0) * radius * pn));
     }
-    public static void drawEasy(boolean pre) {
-        if (pre) {
-            GL11.glEnable(32823);
-            GL11.glPolygonOffset(1.0F, -1100000.0F);
-        } else {
-            GL11.glDisable(32823);
-            GL11.glPolygonOffset(1.0F, 1100000.0F);
-        }
-    }
-    public static int drawStringStringInteger = 0;
-    public static int drawStringHUDInteger = 0;
 
     public static void drawRoundedOutline(float x, float y, float x1, float y1, final float radius, final float borderSize, final int color) {
         drawRoundedOutline(x, y, x1, y1, radius, borderSize , color, new boolean[] {true,true,true,true});

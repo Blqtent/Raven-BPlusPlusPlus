@@ -71,6 +71,7 @@ configurations {
 
 dependencies {
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+    implementation 'org.projectlombok:lombok:1.18.22'
     embed(fileTree(dir: "libs", include: "discord-rpc.jar"))
 
     embed('org.spongepowered:mixin:0.6-SNAPSHOT') {
@@ -101,6 +102,7 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+    rename "(.+_at.cfg)", "META-INF/\$1"
 }
 
 
@@ -126,6 +128,7 @@ jar {
     manifest {
         attributes(
                 'MixinConfigs': 'mixins.keystrokesmod.json',
+                'FMLAT': 'ravenMCP_at.cfg',
                 'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
                 'TweakOrder': 0,
                 "FMLCorePlugin": "keystrokesmod.client.mixin.MixinLoader",

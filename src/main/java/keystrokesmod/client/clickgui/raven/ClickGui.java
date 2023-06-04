@@ -60,15 +60,15 @@ public class ClickGui extends GuiScreen {
     }
 
     @Override
-    public void initGui() {
+	public void initGui() {
         super.initGui();
         categoryList.forEach(CategoryComponent::initGui);
     }
 
     @Override
-    public void drawScreen(int x, int y, float p) {
-        super.drawScreen(x, y, p);
-        mouseX = x; mouseY = y;
+	public void drawScreen(int x, int y, float p) {
+    	super.drawScreen(x, y, p);
+    	mouseX = x; mouseY = y;
         Version clientVersion = Raven.versionManager.getClientVersion();
         Version latestVersion = Raven.versionManager.getLatestVersion();
 
@@ -91,11 +91,11 @@ public class ClickGui extends GuiScreen {
             for (int i = Raven.updateText.length - 1; i >= 0; i--) {
                 String up = Raven.updateText[i];
                 if (GuiModule.useCustomFont())
-                    FontUtil.normal.drawSmoothString(up, halfScreenWidth - (this.fontRendererObj.getStringWidth(up) / 2),
+					FontUtil.normal.drawSmoothString(up, halfScreenWidth - (this.fontRendererObj.getStringWidth(up) / 2),
                             this.height - (this.fontRendererObj.FONT_HEIGHT * rows) - margin,
                             Utils.Client.astolfoColorsDraw(10, 28, speed));
-                else
-                    mc.fontRendererObj.drawStringWithShadow(up,
+				else
+					mc.fontRendererObj.drawStringWithShadow(up,
                             halfScreenWidth - (this.fontRendererObj.getStringWidth(up) / 2),
                             this.height - (this.fontRendererObj.FONT_HEIGHT * rows) - margin,
                             Utils.Client.astolfoColorsDraw(10, 28, speed));
@@ -103,15 +103,15 @@ public class ClickGui extends GuiScreen {
                 margin += 2;
             }
         } else if (GuiModule.useCustomFont())
-            FontUtil.normal.drawSmoothString(
-                    "Raven B4 v" + clientVersion + " | Config: " + Raven.configManager.getConfig().getName(), 4,
-                    this.height - 3 - mc.fontRendererObj.FONT_HEIGHT,
-                    Utils.Client.astolfoColorsDraw(10, 14, speed));
-        else
-            mc.fontRendererObj.drawStringWithShadow(
-                    "Raven B4 v" + clientVersion + " | Config: " + Raven.configManager.getConfig().getName(), 4,
-                    this.height - 3 - mc.fontRendererObj.FONT_HEIGHT,
-                    Utils.Client.astolfoColorsDraw(10, 14, speed));
+			FontUtil.normal.drawSmoothString(
+		            "Raven B4 v" + clientVersion + " | Config: " + Raven.configManager.getConfig().getName(), 4,
+		            this.height - 3 - mc.fontRendererObj.FONT_HEIGHT,
+		            Utils.Client.astolfoColorsDraw(10, 14, speed));
+		else
+			mc.fontRendererObj.drawStringWithShadow(
+		            "Raven B4 v" + clientVersion + " | Config: " + Raven.configManager.getConfig().getName(), 4,
+		            this.height - 3 - mc.fontRendererObj.FONT_HEIGHT,
+		            Utils.Client.astolfoColorsDraw(10, 14, speed));
 
         this.drawVerticalLine(halfScreenWidth - 10 - w_c, quarterScreenHeight - 30, quarterScreenHeight + 38,
                 Utils.Client.customDraw(0));
@@ -140,7 +140,7 @@ public class ClickGui extends GuiScreen {
     }
 
     @Override
-    public void mouseClicked(int x, int y, int mouseButton) throws IOException {
+	public void mouseClicked(int x, int y, int mouseButton) throws IOException {
         terminal.mouseDown(x, y, mouseButton);
         for(CategoryComponent category : visableCategoryList())
             if(category.mouseDown(x, y, mouseButton)) {
@@ -150,7 +150,7 @@ public class ClickGui extends GuiScreen {
     }
 
     @Override
-    public void mouseReleased(int x, int y, int mouseButton) {
+	public void mouseReleased(int x, int y, int mouseButton) {
         terminal.mouseReleased(x, y, mouseButton);
         if (terminal.overPosition(x, y))
             return;
@@ -158,11 +158,11 @@ public class ClickGui extends GuiScreen {
         visableCategoryList().forEach(category -> category.mouseReleased(x, y, mouseButton));
 
         if (Raven.clientConfig != null)
-            Raven.clientConfig.saveConfig();
+			Raven.clientConfig.saveConfig();
     }
 
     @Override
-    public void keyTyped(char t, int k) {
+	public void keyTyped(char t, int k) {
         terminal.keyTyped(t, k);
         if(lastCategory != null)
             lastCategory.keyTyped(t, k);
@@ -174,24 +174,24 @@ public class ClickGui extends GuiScreen {
     }
 
     @Override
-    public void handleMouseInput() throws IOException {
+	public void handleMouseInput() throws IOException {
         super.handleMouseInput();
         int i = Mouse.getEventDWheel() * 5;
         visableCategoryList().forEach(category -> {
             if(category.isMouseOver(mouseX, mouseY))
                 category.scroll(i);
-        });
+            });
     }
 
     @Override
-    public void onGuiClosed() {
+	public void onGuiClosed() {
         visableCategoryList().forEach(CategoryComponent::guiClosed);
         Raven.configManager.save();
         Raven.clientConfig.saveConfig();
     }
 
     @Override
-    public boolean doesGuiPauseGame() {
+	public boolean doesGuiPauseGame() {
         return false;
     }
 
@@ -201,7 +201,7 @@ public class ClickGui extends GuiScreen {
 
     public CategoryComponent getCategoryComponent(ModuleCategory mCat) {
         for (CategoryComponent cc : categoryList)
-            if (cc.categoryName == mCat)
+			if (cc.categoryName == mCat)
                 return cc;
         return null;
     }
