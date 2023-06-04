@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.stats.StatList;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -163,6 +164,21 @@ public class Utils {
             }
 
             return null;
+        }
+
+        public static boolean isInLiquid() {
+            return mc.thePlayer.isInWater() || mc.thePlayer.isInLava();
+        }
+        public static boolean canCrit() {
+            return !Utils.Player.isInLiquid() && mc.thePlayer.onGround && mc.thePlayer.isSwingInProgress;
+        }
+
+        public static void fakeJump(boolean playerMoveInputJump) {
+            if(playerMoveInputJump)
+                mc.thePlayer.movementInput.jump = true;
+
+            mc.thePlayer.isAirBorne = true;
+            mc.thePlayer.triggerAchievement(StatList.jumpStat);
         }
 
         public static void hotkeyToSlot(int slot) {

@@ -267,7 +267,6 @@ public class Module {
         minigames(false, category, "Minigames"),
         other(false, category, "Other"),
         client(false, category, "Client"),
-        hotkey(false, category, "Hotkey"),
         config(false, client, "Config"),
         sumo(false, minigames, "Sumo");
 
