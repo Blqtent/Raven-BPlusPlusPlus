@@ -1,139 +1,160 @@
 package keystrokesmod.client.module.modules.world;
 
-import java.util.HashMap;
-
 import com.google.common.eventbus.Subscribe;
-
-import keystrokesmod.client.event.impl.ForgeEvent;
-import keystrokesmod.client.event.impl.TickEvent;
+//import keystrokesmod.client.event.impl.BooleanEvent; will uncomment after adding these events
+//import keystrokesmod.client.event.impl.ComboEvent;
+import keystrokesmod.client.event.impl.UpdateEvent;
+//import keystrokesmod.client.event.impl.WorldChangeEvent;
 import keystrokesmod.client.main.Raven;
 import keystrokesmod.client.module.Module;
-import keystrokesmod.client.module.modules.player.Freecam;
+import keystrokesmod.client.module.setting.impl.ComboSetting;
 import keystrokesmod.client.module.setting.impl.TickSetting;
-import keystrokesmod.client.utils.Utils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 
+import java.util.ArrayList;
+
+//Taken straight from Quantum coz i don't wanna code the same thing twice and also im lazy
+// By Cosmic-SC
 public class AntiBot extends Module {
-    private static final HashMap<EntityPlayer, Long> newEnt = new HashMap<>();
-    private final long ms = 4000L;
-    public static TickSetting a, dead;
+    private static final ComboSetting<MODES> mode = new ComboSetting<>("Mode", MODES.ChecksOnly);
+    private final TickSetting remove = new TickSetting("Remove Bots", false);
+    private static final TickSetting tab = new TickSetting("TabList Check", false);
+    private static final TickSetting name = new TickSetting("Invalid Check", false);
+    private static final TickSetting sound = new TickSetting("Sound Check",true);
+    public static ArrayList<Entity> bots = new ArrayList<>();
 
     public AntiBot() {
         super("AntiBot", ModuleCategory.world);
-        withEnabled(true);
+        this.registerSetting(tab);
+        this.registerSetting(name);
+        this.registerSetting(sound);
+        this.registerSetting(remove);
+        this.registerSetting(mode);
+    }
 
-        this.registerSetting(a = new TickSetting("Wait 80 ticks", false));
-        this.registerSetting(dead = new TickSetting("Remove dead", true));
+    @Subscribe
+    public void onUpdate(UpdateEvent event) {
+        if (!isPlayerInGame()) return;
+        try {
+            switch (mode.getMode()) {
+                case Hypixel:
+                    for (Entity entity : mc.theWorld.loadedEntityList) {
+                        if (entity instanceof EntityPlayer) {
+                            if (entity != mc.thePlayer && !((EntityPlayer) entity).isSpectator()) {
+                                if (bot(entity)) {
+                                    if (remove.isToggled()) {
+                                        mc.theWorld.removeEntity(entity);
+                                    }
+                                    bots.add(entity);
+                                }
+                            } else {
+                                bots.remove(entity);
+                            }
+                        }
+                    }
+                    break;
+                case Advanced:
+                    mc.theWorld.playerEntities.forEach(player -> {
+                        if (player != mc.thePlayer) {
+                            if (mc.thePlayer.getDistanceSq(player.posX, mc.thePlayer.posY, player.posZ) > 200) {
+                                bots.remove(player);
+                            }
+
+                            if (player.ticksExisted < 5 || player.isInvisible() || mc.thePlayer.getDistanceSq(player.posX, mc.thePlayer.posY, player.posZ) > 100 * 100) {
+                                if (!bots.contains(player)) {
+                                    if (remove.isToggled()) {
+                                        mc.theWorld.removeEntity(player);
+                                    }
+                                    bots.add(player);
+                                }
+                            }
+                        }
+                    });
+                    break;
+                case Matrix:
+                    if (mc.thePlayer.ticksExisted > 110) {
+                        for (final Entity entity : mc.theWorld.loadedEntityList) {
+                            if (entity instanceof EntityPlayer && entity != mc.thePlayer && entity.getCustomNameTag() == "" && !bots.contains(entity)) {
+                                bots.add(entity);
+                                if (remove.isToggled()) {
+                                    mc.theWorld.removeEntity(entity);
+                                }
+                            }
+                        }
+                    } else {
+                        bots = new ArrayList<Entity>();
+                    }
+                    break;
+                case ChecksOnly:
+                    for (final Entity entity : mc.theWorld.loadedEntityList) {
+                        if (entity instanceof EntityPlayer && entity != mc.thePlayer) {
+                            if ((alreadyTablist((EntityPlayer) entity) && tab.isToggled()) || (invalidName(entity) && name.isToggled())) {
+                                if (sound.isToggled() && entity.doesEntityNotTriggerPressurePlate()) {
+                                    if (remove.isToggled()) {
+                                        mc.theWorld.removeEntity(entity);
+                                    }
+                                }
+                            }
+                        }
+                    }
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+/*    
+
+AHHHHH JUST CHANGE THE EVENTS IM TOO LAZY TO DO IT
+
+    @Subscribe
+    public void guiButtonToggle(ComboEvent b) {
+        if (!isPlayerInGame()) return;
+        if (b.getSetting() == mode) {
+            bots.clear();
+        }
+    }
+
+    @Subscribe
+    public void onChange(WorldChangeEvent event) {
+        if (!isPlayerInGame()) return;
+        bots.clear();
+    }
+*/
+    public static boolean bot(Entity entity) {
+        if (Raven.moduleManager.getModuleByClazz(AntiBot.class).isEnabled()) {
+            if (mode.getMode() == MODES.ChecksOnly) {
+                return (alreadyTablist((EntityPlayer) entity) && tab.isToggled()) || (invalidName(entity) && name.isToggled());
+            } else {
+                return bots.contains(entity);
+            }
+        } else {
+            return false;
+        }
     }
 
     @Override
     public void onDisable() {
-        newEnt.clear();
+        if (!isPlayerInGame()) return;
+        bots.clear();
     }
 
-    @Subscribe
-    public void onEntityJoinWorld(ForgeEvent fe) {
-        if (fe.getEvent() instanceof EntityJoinWorldEvent) {
-            EntityJoinWorldEvent event = ((EntityJoinWorldEvent) fe.getEvent());
-
-            if (!Utils.Player.isPlayerInGame())
-                return;
-
-            if (a.isToggled() && event.entity instanceof EntityPlayer && event.entity != mc.thePlayer) {
-                newEnt.put((EntityPlayer) event.entity, System.currentTimeMillis());
-            }
-        }
+    public enum MODES {
+        Hypixel,
+        Advanced,
+        Matrix,
+        ChecksOnly
     }
 
-    @Subscribe
-    public void onTick(TickEvent ev) {
-        if (a.isToggled() && !newEnt.isEmpty()) {
-            long now = System.currentTimeMillis();
-            newEnt.values().removeIf(e -> e < now - 4000L);
-        }
 
+    static boolean alreadyTablist(final EntityPlayer entity) {
+        return mc.getNetHandler().getPlayerInfoMap().stream().filter((player) -> player != null && entity != null && player.getDisplayName() != null && entity.getDisplayName() != null && player.getDisplayName().getUnformattedText().equals(entity.getDisplayName().getUnformattedText())).count() > 0;
     }
 
-    public static boolean bot(Entity en) {
-        if (!Utils.Player.isPlayerInGame() || mc.currentScreen != null)
-            return false;
-        if (Freecam.en != null && Freecam.en == en) {
-            return true;
-        }
-        Module antiBot = Raven.moduleManager.getModuleByClazz(AntiBot.class);
-        if ((antiBot != null && !antiBot.isEnabled()) || !Utils.Client.isHyp()) {
-        } else if ((a.isToggled() && !newEnt.isEmpty() && newEnt.containsKey(en)) || en.getName().startsWith("§c")) {
-            return true;
-        } else if(en.isDead && dead.isToggled()) {
-            return true;
-        } else {
-            String n = en.getDisplayName().getUnformattedText();
-            if (n.contains("§")) {
-                return n.contains("[NPC] ");
-            }
-            if (n.isEmpty() && en.getName().isEmpty()) {
-                return true;
-            }
-
-            // illegal name checks
-            if(n.startsWith("CIT-")) return true;
-            if(n.equals("Empty")) return true;
-            if(n.contains(" ")) return true;
-            if(n.contains("<"))return true;
-            if(n.contains(">"))return true;
-            if(n.contains("#"))return true;
-            if(n.contains("+"))return true;
-            if(n.contains("&"))return true;
-            if(n.contains("/"))return true;
-            if(n.contains("("))return true;
-            if(n.contains(")"))return true;
-            if(n.contains("}"))return true;
-            if(n.contains("@"))return true;
-            if(n.contains("%"))return true;
-            if(n.contains(";"))return true;
-            if(n.contains("\n"))return true;
-            if(n.contains("^"))return true;
-            if(n.contains("{"))return true;
-            if(n.contains("'"))return true;
-            if(n.contains("*"))return true;
-            if(n.contains("~"))return true;
-            if(n.contains("$"))return true;
-            if(n.contains("["))return true;
-            if(n.contains("]"))return true;
-            if(n.contains(":")) return true;
-            if(n.contains("-")) return true;
-            if(n.contains("!")) return true;
-            if(n.contains("?")) return true;
-            if(n.contains("=")) return true;
-            if(n.contains("§")) return true;
-            if(n.length() < 3) return true;
-
-            if (n.length() == 10) {
-                int num = 0;
-                int let = 0;
-                char[] var4 = n.toCharArray();
-
-                for (char c : var4) {
-                    if (Character.isLetter(c)) {
-                        if (Character.isUpperCase(c)) {
-                            return false;
-                        }
-
-                        ++let;
-                    } else {
-                        if (!Character.isDigit(c)) {
-                            return false;
-                        }
-
-                        ++num;
-                    }
-                }
-
-                return num >= 2 && let >= 2;
-            }
-        }
-        return false;
+    static boolean invalidName(final Entity e) {
+        return e.getName().contains("-") || e.getName().contains("/") || e.getName().contains("|") || e.getName().contains("<") || e.getName().contains(">") || e.getName().contains("\u0e22\u0e07") || e.getName().equals("");
     }
 }
