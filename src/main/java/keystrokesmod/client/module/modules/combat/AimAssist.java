@@ -20,11 +20,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-public class AimAssist extends Module {
+public class AimAssist extends Module { //TODO: Patch GCD
     public static SliderSetting speedYaw, complimentYaw, speedPitch, complimentPitch;
     public static SliderSetting fov;
     public static SliderSetting distance;
@@ -102,7 +103,10 @@ public class AimAssist extends Module {
                                                             speedPitch.getInput())))));
 
                                     mc.thePlayer.rotationPitch += val;
-
+                                    //Bypass for anticheats with rotation checks xd
+                                    mc.thePlayer.rotationPitch += Math.random() * 0.2 - 0.1;
+                                    mc.thePlayer.rotationPitch = Math.max(mc.thePlayer.rotationPitch, -90);
+                                    mc.thePlayer.rotationPitch = Math.min(mc.thePlayer.rotationPitch, 90);
                                 }
                             }
 
