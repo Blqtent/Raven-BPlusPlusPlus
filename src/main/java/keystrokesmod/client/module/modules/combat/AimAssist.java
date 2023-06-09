@@ -90,6 +90,11 @@ public class AimAssist extends Module { //TODO: Patch GCD
                                     float val = (float) (-(complimentSpeed + (n / (101.0D - (float) ThreadLocalRandom.current()
                                             .nextDouble(speedYaw.getInput() - 4.723847, speedYaw.getInput())))));
                                     mc.thePlayer.rotationYaw += val;
+                                    
+                                    //Bypass for anticheats with rotation checks xd
+                                    mc.thePlayer.rotationPitch += Math.random() * 0.2 - 0.1;
+                                    mc.thePlayer.rotationPitch = Math.max(mc.thePlayer.rotationPitch, -90);
+                                    mc.thePlayer.rotationPitch = Math.min(mc.thePlayer.rotationPitch, 90);
                                 }
                                 if (aimPitch.isToggled()) {
                                     double complimentSpeed = Utils.Player.PitchFromEntity(en,
