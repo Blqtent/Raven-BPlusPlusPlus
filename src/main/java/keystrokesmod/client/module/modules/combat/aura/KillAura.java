@@ -138,11 +138,11 @@ public class KillAura extends Module {
             if (casted != null && Utils.Player.isPlayerHoldingSword()) {
                 switch (blockMode.getMode()){
                     case Vanilla:
-                        this.block(false,true);
+                        this.block(false,false);
                         break;
                     case Damage:
                         if (mc.thePlayer.hurtTime > 0){
-                            this.block(false,true);
+                            this.block(false,false);
                         }
                         break;
                 }
@@ -206,16 +206,16 @@ public class KillAura extends Module {
      * Visuals
      */
     @Subscribe
-    public void renderWorldLast(ForgeEvent event) {
-        if (event.getEvent() instanceof RenderWorldLastEvent) {
-            if (target != null && pTargets != null) {
+    public void renderWorldLast(ForgeEvent fe) {
+        if((fe.getEvent() instanceof RenderWorldLastEvent) && (target != null)) {
+            try { //@reason fix nullpointers
                 int red = (int) (((20 - target.getHealth()) * 13) > 255 ? 255 : (20 - target.getHealth()) * 13);
                 int green = 255 - red;
                 final int rgb = new Color(red, green, 0).getRGB();
                 Utils.HUD.drawBoxAroundEntity(target, 2, 0, 0, rgb, false);
                 for (EntityPlayer p : pTargets)
                     Utils.HUD.drawBoxAroundEntity(p, 2, 0, 0, 0x800000FF, false);
-            }
+            } catch (Exception e){}
         }
     }
     /**
@@ -230,7 +230,9 @@ public class KillAura extends Module {
             if (interact && target != null && mc.objectMouseOver.entityHit == target) {
                 mc.playerController.interactWithEntitySendPacket(mc.thePlayer, target);
             }
-            mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
+            //shitty autoblock coz i dont wanna make the whole thing again
+            //maybe in future ill make actual working autoblocks
+            KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(),true);
             blocking = true;
         }
     }
