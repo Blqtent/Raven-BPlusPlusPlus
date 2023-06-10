@@ -1,6 +1,6 @@
 Raven-B+++
 
-A Free Client That Is Built On Top Of Raven B++, Better than Vape V4, Bypasses Anti-Cheats Like Intave , Polar, Grim, V*lc*n't
+A Free Client That Is Built On Top Of Raven B++, Better than Vape V4, Bypasses Anti-Cheats Like Intave , Polar & Grim
 
 How To Setup The Workspace Yourself?                                                                                                                                                                                                   
 Download The SRC,
