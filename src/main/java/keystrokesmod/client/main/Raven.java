@@ -34,7 +34,7 @@ public class Raven {
     public static final VersionManager versionManager = new VersionManager();
     public static CommandManager commandManager;
     public static final String sourceLocation = "https://github.com/StephenIsTaken/Raven-BPlusPlusPlus";
-    public static final String downloadLocation = "https://github.com/StephenIsTaken/Raven-BPlusPlusPlus/releases/download/V1/1.8.9.BetterKeystrokes.V-1.2.jar";
+    public static final String downloadLocation = "https://github.com/StephenIsTaken/Raven-BPlusPlusPlus/releases/latest";
     public static final String discord = "https://discord.gg/ZJJRC9mBWk";
     public static String[] updateText = {
             "Your version of Raven B+++ (" + versionManager.getClientVersion().toString() + ") is outdated!",
