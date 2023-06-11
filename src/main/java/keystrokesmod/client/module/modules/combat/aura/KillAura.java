@@ -48,7 +48,7 @@ public class KillAura extends Module {
     MillisTimer clickTimer = new MillisTimer();
     public static SliderSetting reach;
     private DoubleSliderSetting aps;
-    private TickSetting disableWhenFlying, fixMovement,legitAttack;
+    private TickSetting disableWhenFlying, fixMovement,legitAttack,visuals;
     private ComboSetting<BlockMode> blockMode;
     /**
      * @Author Cosmic-SC
@@ -62,6 +62,7 @@ public class KillAura extends Module {
         this.registerSetting(legitAttack = new TickSetting("Legit Attack",true));
         this.registerSetting(disableWhenFlying = new TickSetting("Disable when flying", true));
         this.registerSetting(fixMovement = new TickSetting("Movement Fix", true));
+        this.registerSetting(visuals = new TickSetting("Visuals",true));
         this.registerSetting(blockMode = new ComboSetting<BlockMode>("Block mode", BlockMode.Legit));
     }
     @Subscribe
@@ -207,6 +208,7 @@ public class KillAura extends Module {
      */
     @Subscribe
     public void renderWorldLast(ForgeEvent fe) {
+        if (!visuals.isToggled()) return;
         if((fe.getEvent() instanceof RenderWorldLastEvent) && (target != null)) {
             try { //@reason fix nullpointers
                 int red = (int) (((20 - target.getHealth()) * 13) > 255 ? 255 : (20 - target.getHealth()) * 13);
