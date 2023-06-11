@@ -12,6 +12,7 @@ import keystrokesmod.client.main.Raven;
 import keystrokesmod.client.module.Module;
 import keystrokesmod.client.module.modules.client.Targets;
 import keystrokesmod.client.module.modules.player.RightClicker;
+import keystrokesmod.client.module.modules.combat.aura.KillAura;
 import keystrokesmod.client.module.setting.impl.DescriptionSetting;
 import keystrokesmod.client.module.setting.impl.SliderSetting;
 import keystrokesmod.client.module.setting.impl.TickSetting;
@@ -69,9 +70,10 @@ public class AimAssist extends Module { //TODO: Patch GCD
                             return;
                     }
                 }
+                if (Raven.moduleManager.getModuleByClazz(KillAura.class).isEnabled()) return;
 
                 if (!weaponOnly.isToggled() || Utils.Player.isPlayerHoldingWeapon()) {
-
+                
                     Module autoClicker = Raven.moduleManager.getModuleByClazz(RightClicker.class); // right clicker???????????
                     // what if player clicking but mouse not down ????
                     if ((clickAim.isToggled() && Utils.Client.autoClickerClicking())
