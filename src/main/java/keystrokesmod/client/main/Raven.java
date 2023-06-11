@@ -35,7 +35,7 @@ public class Raven {
     public static CommandManager commandManager;
     public static final String sourceLocation = "https://github.com/StephenIsTaken/Raven-BPlusPlusPlus";
     public static final String downloadLocation = "https://github.com/StephenIsTaken/Raven-BPlusPlusPlus/tree/main/build/libs";
-    public static final String discord = "https://discord.gg/UqJ8ngteud";
+    public static final String discord = "https://discord.gg/ZJJRC9mBWk";
     public static String[] updateText = {
             "Your version of Raven B+++ (" + versionManager.getClientVersion().toString() + ") is outdated!",
             "Enter the command update into client CommandLine to open the download page",
