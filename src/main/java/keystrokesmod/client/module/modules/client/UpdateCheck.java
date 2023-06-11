@@ -43,7 +43,7 @@ public class UpdateCheck extends Module {
 
             if (current.isNewerThan(latest)) {
                 Utils.Player.sendMessageToSelf("You are on a beta build of raven");
-                Utils.Player.sendMessageToSelf("https://github.com/K-ov/Raven-bPLUS");
+                Utils.Player.sendMessageToSelf("https://github.com/StephenIsTaken/Raven-BPlusPlusPlus");
             } else {
                 Utils.Player.sendMessageToSelf("You are on the latest public version!");
             }
@@ -61,7 +61,7 @@ public class UpdateCheck extends Module {
                 } catch (MalformedURLException bruh) {
                     bruh.printStackTrace();
                     Utils.Player
-                            .sendMessageToSelf("&cFailed to open page! Please report this bug in Raven b++'s discord");
+                            .sendMessageToSelf("&cFailed to open page! Please report this bug in Raven b+++'s discord");
                 }
             }
 
