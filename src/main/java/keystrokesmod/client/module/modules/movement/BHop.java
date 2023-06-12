@@ -14,14 +14,16 @@ public class VulcantBHop extends Module {
     private Minecraft mc = Minecraft.getMinecraft();
     private boolean wasTimer = false;
     public static SliderSetting sdf;
-    private static final String c1 = "Vulcant (Blqtent credit)";
+    private static final String c1 = "Vulcan";
     public VulcantBHop() {
-        super("BHop (Credit goes to Blqtent for vulcan bypass)", ModuleCategory.movement);
+        super("BHop (Credit goes to Blqtent)", ModuleCategory.movement);
         this.registerSetting(sdf = new SliderSetting("Mode", 1.0D, 1.0D, 1.0D, 1.0D));
         this.registerSetting(dc = new DescriptionSetting(Utils.md + c1));
 
     }
+
     // Subscribe to https://www.youtube.com/channel/UCa1M9UnJX7IGJMbmAmLbDFQ for epic BHop
+
     @Subscribe
     public void onTick(TickEvent e) {
         if (a.getInput() == 1.0D) {
