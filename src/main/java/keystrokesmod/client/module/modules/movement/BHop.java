@@ -12,13 +12,24 @@ import net.minecraft.client.Minecraft;
 
 public class VulcantBHop extends Module {
     private Minecraft mc = Minecraft.getMinecraft();
-    
+    private boolean wasTimer = false;
+    public static SliderSetting sdf;
+    private static final String c1 = "Vulcant (Blqtent credit)";
     public VulcantBHop() {
-        super("Vulcan BHop (Credit goes to Blqtent)", ModuleCategory.movement);
+        super("BHop (Credit goes to Blqtent for vulcan bypass)", ModuleCategory.movement);
+        this.registerSetting(sdf = new SliderSetting("Mode", 1.0D, 1.0D, 1.0D, 1.0D));
+        this.registerSetting(dc = new DescriptionSetting(Utils.md + c1));
+
     }
     // Subscribe to https://www.youtube.com/channel/UCa1M9UnJX7IGJMbmAmLbDFQ for epic BHop
     @Subscribe
     public void onTick(TickEvent e) {
+        if (a.getInput() == 1.0D) {
+            vulcan()
+        }
+    }
+    
+    private void vulcan() {
         if (wasTimer) {
             mc.timer.timerSpeed = 1.00f;
             wasTimer = false;
@@ -49,7 +60,7 @@ public class VulcantBHop extends Module {
             mc.timer.timerSpeed = 1.00f;
         }        
     }
-
+    
     public static float getPlayerDirection() {
         // start with our current yaw
         float yaw = mc.thePlayer.rotationYaw;
