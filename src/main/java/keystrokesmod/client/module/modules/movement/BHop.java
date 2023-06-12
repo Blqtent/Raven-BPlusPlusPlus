@@ -27,7 +27,7 @@ public class VulcantBHop extends Module {
     @Subscribe
     public void onTick(TickEvent e) {
         if (a.getInput() == 1.0D) {
-            vulcan()
+            vulcan();
         }
     }
     
