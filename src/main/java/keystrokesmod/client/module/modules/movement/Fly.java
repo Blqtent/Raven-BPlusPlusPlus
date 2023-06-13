@@ -15,7 +15,7 @@ public class Fly extends Module {
     public static SliderSetting a;
     public static SliderSetting b;
     private static final String c1 = "Vanilla";
-    private static final String c2 = "Glide";
+    private static final String c2 = "Boost";
 
     public Fly() {
         super("Fly", ModuleCategory.movement);
