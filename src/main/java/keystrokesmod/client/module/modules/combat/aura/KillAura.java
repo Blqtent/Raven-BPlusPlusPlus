@@ -9,13 +9,15 @@ import keystrokesmod.client.utils.CombatUtils;
 import keystrokesmod.client.utils.MillisTimer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldSettings;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.apache.commons.lang3.RandomUtils;
-import org.lwjgl.input.Mouse;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -31,7 +33,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class KillAura extends Module {
 
-    private EntityPlayer target;
+    private static EntityPlayer target;
     private List<EntityPlayer> pTargets;
     private CoolDown coolDown = new CoolDown(1);
     private boolean locked;
@@ -48,8 +50,8 @@ public class KillAura extends Module {
     MillisTimer clickTimer = new MillisTimer();
     public static SliderSetting reach;
     private DoubleSliderSetting aps;
-    private TickSetting disableWhenFlying, fixMovement,legitAttack,visuals;
-    private ComboSetting<BlockMode> blockMode;
+    private TickSetting disableWhenFlying, fixMovement,legitAttack;
+    public static ComboSetting<BlockMode> blockMode;
     /**
      * @Author Cosmic-SC
      * @Since 10/6/2023
@@ -62,7 +64,6 @@ public class KillAura extends Module {
         this.registerSetting(legitAttack = new TickSetting("Legit Attack",true));
         this.registerSetting(disableWhenFlying = new TickSetting("Disable when flying", true));
         this.registerSetting(fixMovement = new TickSetting("Movement Fix", true));
-        this.registerSetting(visuals = new TickSetting("Visuals",true));
         this.registerSetting(blockMode = new ComboSetting<BlockMode>("Block mode", BlockMode.Legit));
     }
     @Subscribe
@@ -139,11 +140,11 @@ public class KillAura extends Module {
             if (casted != null && Utils.Player.isPlayerHoldingSword()) {
                 switch (blockMode.getMode()){
                     case Vanilla:
-                        this.block(false,false);
+                        this.block();
                         break;
                     case Damage:
                         if (mc.thePlayer.hurtTime > 0){
-                            this.block(false,false);
+                            this.block();
                         }
                         break;
                 }
@@ -208,7 +209,6 @@ public class KillAura extends Module {
      */
     @Subscribe
     public void renderWorldLast(ForgeEvent fe) {
-        if (!visuals.isToggled()) return;
         if((fe.getEvent() instanceof RenderWorldLastEvent) && (target != null)) {
             try { //@reason fix nullpointers
                 int red = (int) (((20 - target.getHealth()) * 13) > 255 ? 255 : (20 - target.getHealth()) * 13);
@@ -223,29 +223,39 @@ public class KillAura extends Module {
     /**
      * Misc Stuff. Utils are below
      */
+
+    public static EntityPlayer getTraget(){
+        return target;
+    }
     public void rotate(float yaw, float pitch, boolean e) {
         this.yaw = yaw;
         this.pitch = pitch;
     }
-    private void block(final boolean check, final boolean interact) {
-        if (!blocking || !check) {
-            if (interact && target != null && mc.objectMouseOver.entityHit == target) {
-                mc.playerController.interactWithEntitySendPacket(mc.thePlayer, target);
-            }
-            //shitty autoblock coz i dont wanna make the whole thing again
-            //maybe in future ill make actual working autoblocks
-            KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(),true);
-            blocking = true;
+    private void block() {
+        this.sendUseItem(KillAura.mc.thePlayer, KillAura.mc.theWorld, KillAura.mc.thePlayer.getCurrentEquippedItem());
+        KillAura.mc.gameSettings.keyBindUseItem.pressed = true;
+        KillAura.mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, KillAura.mc.thePlayer.getHeldItem(), 0.0f, 0.0f, 0.0f));
+        this.blocking = true;
+    }
+
+    private void unblock() {
+        if (this.blocking) {
+            KillAura.mc.gameSettings.keyBindUseItem.pressed = false;
+            mc.getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+            this.blocking = false;
         }
     }
-    private void unblock() {
-        if (blocking) {
-            if (!mc.gameSettings.keyBindUseItem.isKeyDown()) {
-                mc.getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-            } else {
-                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(),false);
+
+    public void sendUseItem(EntityPlayer playerIn, World worldIn, ItemStack itemStackIn) {
+        if (mc.playerController.getCurrentGameType() != WorldSettings.GameType.SPECTATOR) {
+            int i = itemStackIn.stackSize;
+            ItemStack itemstack = itemStackIn.useItemRightClick(worldIn, playerIn);
+            if (itemstack != itemStackIn || itemstack.stackSize != i) {
+                playerIn.inventory.mainInventory[playerIn.inventory.currentItem] = itemstack;
+                if (itemstack.stackSize == 0) {
+                    playerIn.inventory.mainInventory[playerIn.inventory.currentItem] = null;
+                }
             }
-            blocking = false;
         }
     }
     private double Sens() {
@@ -291,10 +301,14 @@ public class KillAura extends Module {
         if (min == max) cps = min;
         else cps = RandomUtils.nextDouble(min, max);
     }
+
+    public void onDisable(){this.unblock();}
+
     public enum BlockMode {
         NONE,
         Legit,
         Vanilla,
-        Damage;
+        Damage,
+        Fake;
     }
 }
