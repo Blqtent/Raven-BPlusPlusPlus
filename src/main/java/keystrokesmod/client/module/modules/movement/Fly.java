@@ -21,7 +21,7 @@ public class Fly extends Module {
         super("Fly", ModuleCategory.movement);
         this.registerSetting(a = new SliderSetting("Value", 1.0D, 1.0D, 2.0D, 1.0D));
         this.registerSetting(dc = new DescriptionSetting(Utils.md + c1));
-        this.registerSetting(b = new SliderSetting("Speed", 2.0D, 1.0D, 5.0D, 0.1D));
+        this.registerSetting(b = new SliderSetting("Speed", 2.0D, 1.0D, 20.0D, 0.1D));
     }
 
     public void onEnable() {
