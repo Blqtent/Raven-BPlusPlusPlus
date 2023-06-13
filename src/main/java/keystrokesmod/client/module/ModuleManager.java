@@ -91,7 +91,6 @@ public class ModuleManager {
         //addModule(new Radar());
         addModule(new Targets());
         //addModule(new CursorTrail());
-	addModule(new VulcantBHop());
         //addModule(new SpeedTest());
         //addModule(new LegitAura());
         //addModule(new TargetHUD());
