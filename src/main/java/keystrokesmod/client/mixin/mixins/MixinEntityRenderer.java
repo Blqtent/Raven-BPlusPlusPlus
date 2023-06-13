@@ -28,6 +28,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(priority = 995, value = EntityRenderer.class)
 public class MixinEntityRenderer {
@@ -254,6 +257,12 @@ public class MixinEntityRenderer {
                 this.mc.mcProfiler.endSection();
             }
         }
+    }
+    
+    //@author Cosmic
+    @Inject(method = "hurtCameraEffect", at = @At("HEAD"), cancellable = true)
+    public void hurtCameraEffect(CallbackInfo callbackInfo) {
+        callbackInfo.cancel();
     }
 
     /**
