@@ -14,7 +14,8 @@
         "MixinGuiUtilRenderComponents",
         "MixinMinecraft",
         "MixinNetworkManager",
-        "MixinEntityLivingBase"
+        "MixinEntityLivingBase",
+        "MixinItemRenderer"
     ],
     "client": [
         "IMinecraft"
