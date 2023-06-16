@@ -125,15 +125,17 @@ AHHHHH JUST CHANGE THE EVENTS IM TOO LAZY TO DO IT
     }
 */
     public static boolean bot(Entity entity) {
-        if (Raven.moduleManager.getModuleByClazz(AntiBot.class).isEnabled()) {
-            if (mode.getMode() == MODES.ChecksOnly) {
-                return (alreadyTablist((EntityPlayer) entity) && tab.isToggled()) || (invalidName(entity) && name.isToggled());
+        try {
+            if (Raven.moduleManager.getModuleByClazz(AntiBot.class).isEnabled()) {
+                if (mode.getMode() == MODES.ChecksOnly) {
+                    return (alreadyTablist((EntityPlayer) entity) && tab.isToggled()) || (invalidName(entity) && name.isToggled());
+                } else {
+                    return bots.contains(entity);
+                }
             } else {
-                return bots.contains(entity);
+                return false;
             }
-        } else {
-            return false;
-        }
+        } catch(Exception e){return false;}
     }
 
     @Override
