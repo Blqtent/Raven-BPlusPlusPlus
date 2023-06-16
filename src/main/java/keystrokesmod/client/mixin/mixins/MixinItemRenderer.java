@@ -114,7 +114,7 @@ public abstract class MixinItemRenderer {
             if (this.itemToRender != null) {
                 if (this.itemToRender.getItem() instanceof ItemMap) {
                     this.renderItemMap(player, f2, f, f1);
-                } else if (player.getItemInUseCount() > 0 || (itemToRender.getItem() instanceof ItemSword && (KillAura.blockMode.getMode() == KillAura.BlockMode.Fake || KillAura.blockMode.getMode() == KillAura.BlockMode.Legit) && KillAura.getTraget() != null && Raven.moduleManager.getModuleByClazz(KillAura.class).isEnabled())) {
+                } else if (player.getItemInUseCount() > 0 || (itemToRender.getItem() instanceof ItemSword && (KillAura.blockMode.getMode() == KillAura.BlockMode.Fake) && KillAura.getTraget() != null && Raven.moduleManager.getModuleByClazz(KillAura.class).isEnabled())) {
                     //else if (player.getItemInUseCount() > 0) {
                     EnumAction action = this.itemToRender.getItemUseAction();
                     switch (action) {
