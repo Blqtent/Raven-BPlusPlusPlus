@@ -146,17 +146,22 @@ public class AimAssist extends Module { //TODO: Patch GCD
     }
 
     public static boolean removeFriend(String name) {
-        boolean removed = false;
-        boolean found = false;
-        for (NetworkPlayerInfo networkPlayerInfo : new ArrayList<>(mc.getNetHandler().getPlayerInfoMap())) {
-            Entity entity = mc.theWorld.getPlayerEntityByName(networkPlayerInfo.getDisplayName().getUnformattedText());
-            if (entity.getName().equalsIgnoreCase(name) || entity.getCustomNameTag().equalsIgnoreCase(name)) {
-                removed = removeFriend(entity);
-                found = true;
+        try {
+            boolean removed = false;
+            boolean found = false;
+            for (NetworkPlayerInfo networkPlayerInfo : new ArrayList<>(mc.getNetHandler().getPlayerInfoMap())) {
+                Entity entity = mc.theWorld.getPlayerEntityByName(networkPlayerInfo.getDisplayName().getUnformattedText());
+                if (entity.getName().equalsIgnoreCase(name) || entity.getCustomNameTag().equalsIgnoreCase(name)) {
+                    removed = removeFriend(entity);
+                    found = true;
+                }
             }
-        }
 
-        return found && removed;
+            return found && removed;
+        } catch (Exception e){
+            Utils.Player.sendMessageToSelf("Error! Could not Remove "+name);
+            return false;
+        }
     }
 
     public static boolean removeFriend(Entity entityPlayer) {
