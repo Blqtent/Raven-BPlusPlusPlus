@@ -3,6 +3,7 @@ package keystrokesmod.client.module.modules.render;
 import com.google.common.eventbus.Subscribe;
 import keystrokesmod.client.event.impl.ForgeEvent;
 import keystrokesmod.client.module.Module;
+import keystrokesmod.client.module.setting.impl.RGBSetting;
 import keystrokesmod.client.module.setting.impl.SliderSetting;
 import keystrokesmod.client.utils.Utils;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -17,10 +18,11 @@ import org.lwjgl.opengl.GL11;
 public class Projectiles extends Module {
 
     public static SliderSetting w;
-
+    private final RGBSetting rgb;
     public Projectiles() {
         super("Projectiles", ModuleCategory.render);
         this.registerSetting(w = new SliderSetting("Thickness", 2.0D, 1.0D, 10.0D, 1.0D));
+        this.registerSetting(rgb = new RGBSetting("RGB",255,255,255));
     }
 
     @Subscribe
@@ -87,7 +89,7 @@ public class Projectiles extends Module {
             // draw trajectory line
             double gravity = 0.05D;
             Vec3 playerVector = new Vec3(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-            GL11.glColor4f(0, 1, 0, 0.75F);
+            GL11.glColor4f(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), 0.75F);
             GL11.glBegin(GL11.GL_LINE_STRIP);
             for (int i = 0; i < 1000; i++) {
                 GL11.glVertex3d(arrowPosX - renderManager.viewerPosX, arrowPosY - renderManager.viewerPosY,
@@ -114,8 +116,6 @@ public class Projectiles extends Module {
             GL11.glPushMatrix();
             GL11.glTranslated(renderX - 0.5, renderY - 0.5, renderZ - 0.5);
 
-            GL11.glColor4f(0F, 1F, 0F, 0.25F);
-            GL11.glColor4f(0, 1, 0, 0.75F);
 
             GL11.glPopMatrix();
 
