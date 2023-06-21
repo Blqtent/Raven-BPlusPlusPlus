@@ -59,6 +59,7 @@ public class ModuleManager {
         addModule(new AntiBot());
         addModule(new Chams());
         addModule(new ChestESP());
+	addModule(new ClientSpoof());
         addModule(new Nametags());
         addModule(new PlayerESP());
         addModule(new Tracers());
