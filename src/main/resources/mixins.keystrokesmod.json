@@ -15,6 +15,7 @@
         "MixinMinecraft",
         "MixinNetworkManager",
         "MixinEntityLivingBase",
+        "MixinNetHandlerPlayClient",
         "MixinItemRenderer"
     ],
     "client": [
