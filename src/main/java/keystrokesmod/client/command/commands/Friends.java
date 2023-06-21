@@ -9,7 +9,7 @@ import static keystrokesmod.client.clickgui.raven.Terminal.print;
 public class Friends extends Command {
     public Friends() {
         super("friends", "Allows you to manage and view your friends list", 1, 2,
-                new String[] { "add / remove / list", "Player's name" }, new String[] { "f", "amigos", "lonely4ever" });
+                new String[] { "add / remove / list", "Player's name" }, new String[] { "f", "amigos", "daboyz" });
     }
 
     @Override
@@ -20,12 +20,7 @@ public class Friends extends Command {
             listFriends();
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("add")) {
-                boolean added = AimAssist.addFriend(args[1]);
-                if (added) {
-                    print("Successfully added " + args[1] + " to your friends list!");
-                } else {
-                    print("An error occurred!");
-                }
+                print("Deprecated feature use MIDDLE CLICK Module to add friends");
             } else if (args[0].equalsIgnoreCase("remove")) {
                 boolean removed = AimAssist.removeFriend(args[1]);
                 if (removed) {
