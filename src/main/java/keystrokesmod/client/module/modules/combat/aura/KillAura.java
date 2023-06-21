@@ -14,6 +14,7 @@ import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -48,7 +49,7 @@ public class KillAura extends Module {
     private double max;
     private boolean stopClicker = false;
     MillisTimer clickTimer = new MillisTimer();
-    public static SliderSetting reach;
+    public static SliderSetting reach,rps;
     private DoubleSliderSetting aps;
     private TickSetting disableWhenFlying, fixMovement,legitAttack,visuals;
     public static ComboSetting<BlockMode> blockMode;
@@ -59,6 +60,7 @@ public class KillAura extends Module {
      */
     public KillAura() {
         super("KillAura", ModuleCategory.combat);
+        this.registerSetting(rps = new SliderSetting("Rotation Speed",50,10,100,1));
         this.registerSetting(reach = new SliderSetting("Reach", 3.3, 3, 6, 0.05));
         this.registerSetting(aps = new DoubleSliderSetting("Left CPS", 9, 13, 1, 60, 0.5));
         this.registerSetting(legitAttack = new TickSetting("Legit Attack",true));
@@ -174,8 +176,8 @@ public class KillAura extends Module {
 
         float[] currentRots = new float[]{yaw,pitch};
         float[] prevRots = new float[]{prevYaw,prevPitch};
-        float[] gcd = getGCDRotations(currentRots,prevRots);
-
+        float[] cappedRots = new float[]{maxAngleChange(prevRots[0],currentRots[0], (float) rps.getInput()), maxAngleChange(prevRots[1],currentRots[1], (float) rps.getInput())};
+        float[] gcd = getGCDRotations(cappedRots,prevRots);
         e.setYaw(gcd[0]);
         e.setPitch(gcd[1]);
 
@@ -275,7 +277,12 @@ public class KillAura extends Module {
         currentRots[1] -= pitchDif % gcd;
         return currentRots;
     }
-
+    private float maxAngleChange(final float prev, final float now, final float maxTurn) {
+        float dif = MathHelper.wrapAngleTo180_float(now - prev);
+        if (dif > maxTurn) dif = maxTurn;
+        if (dif < -maxTurn) dif = -maxTurn;
+        return prev + dif;
+    }
     @Override
     public void onEnable() {
         super.onEnable();
@@ -304,7 +311,10 @@ public class KillAura extends Module {
         else cps = RandomUtils.nextDouble(min, max);
     }
 
-    public void onDisable(){this.unblock();}
+    public void onDisable(){
+        target = null;
+        this.unblock();
+    }
 
     public enum BlockMode {
         NONE,
