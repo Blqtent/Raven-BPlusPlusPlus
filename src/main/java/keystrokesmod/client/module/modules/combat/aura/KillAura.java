@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import keystrokesmod.client.event.impl.*;
+import keystrokesmod.client.module.setting.Setting;
 import keystrokesmod.client.utils.CombatUtils;
 import keystrokesmod.client.utils.MillisTimer;
 import net.minecraft.client.settings.KeyBinding;
@@ -51,7 +52,7 @@ public class KillAura extends Module {
     MillisTimer clickTimer = new MillisTimer();
     public static SliderSetting reach,rps;
     private DoubleSliderSetting aps;
-    private TickSetting disableWhenFlying, fixMovement,legitAttack,visuals;
+    private TickSetting disableWhenFlying, fixMovement,legitAttack,visuals,customRPS;
     public static ComboSetting<BlockMode> blockMode;
     /**
      * @Author Cosmic-SC
@@ -60,9 +61,10 @@ public class KillAura extends Module {
      */
     public KillAura() {
         super("KillAura", ModuleCategory.combat);
-        this.registerSetting(rps = new SliderSetting("Rotation Speed",50,10,100,1));
         this.registerSetting(reach = new SliderSetting("Reach", 3.3, 3, 6, 0.05));
         this.registerSetting(aps = new DoubleSliderSetting("Left CPS", 9, 13, 1, 60, 0.5));
+        this.registerSetting(customRPS = new TickSetting("Custom Rotation Speed",false));
+        this.registerSetting(rps = new SliderSetting("Rotation Speed",50,10,100,1));
         this.registerSetting(legitAttack = new TickSetting("Legit Attack",true));
         this.registerSetting(disableWhenFlying = new TickSetting("Disable when flying", true));
         this.registerSetting(fixMovement = new TickSetting("Movement Fix", true));
@@ -177,7 +179,7 @@ public class KillAura extends Module {
         float[] currentRots = new float[]{yaw,pitch};
         float[] prevRots = new float[]{prevYaw,prevPitch};
         float[] cappedRots = new float[]{maxAngleChange(prevRots[0],currentRots[0], (float) rps.getInput()), maxAngleChange(prevRots[1],currentRots[1], (float) rps.getInput())};
-        float[] gcd = getGCDRotations(cappedRots,prevRots);
+        float[] gcd = getGCDRotations(customRPS.isToggled() ? cappedRots : currentRots,prevRots);
         e.setYaw(gcd[0]);
         e.setPitch(gcd[1]);
 
@@ -287,6 +289,13 @@ public class KillAura extends Module {
     public void onEnable() {
         super.onEnable();
         this.updateVals();
+    }
+
+    @Override
+    public void guiButtonToggled(Setting b) {
+        if(b == customRPS) {
+            rps.hideComponent(customRPS.isToggled());
+        }
     }
     private void updateVals() {
         stopClicker = false;
