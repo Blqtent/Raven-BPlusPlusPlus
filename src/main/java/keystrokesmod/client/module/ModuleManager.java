@@ -75,6 +75,7 @@ public class ModuleManager {
         addModule(new Fullbright());
         addModule(new UpdateCheck());
         addModule(new AutoHeader());
+	addModule(new No003s());
         addModule(new AutoTool());
         addModule(new Blocks());
         addModule(new WTap());
