@@ -3,8 +3,7 @@ Raven-B+++
 Discord Server: https://discord.gg/ZJJRC9mBWk
 Join if you wanna chat or get pinged when an update is out
 
-A Free Client (Made By CosmicSC
-) That Is Built On Top Of Raven B++, Better than Vape V4, Bypasses Anti-Cheats Like Intave , Polar & Grim
+A Free Client (Made By CosmicSC) That Is Built On Top Of Raven B++, Better than Vape V4, Bypasses Anti-Cheats Like Intave , Polar & Grim
 
 How To Setup The Workspace Yourself?                                                                                                                                                                                                   
 Download The SRC,
@@ -19,3 +18,5 @@ FAQ:
 [Q] omG iS tHiS clIEnT a rAT?!?!?!111!!?!??!!
 [A] No I Would Never Do Such A Thing As Putting Rats In Minecraft utility mods (real btw not joking 100%)
 
+[Q] My b++ configs do not work. What should I do?
+[A] Change your config(s) extension from .bplus -> .b+++
