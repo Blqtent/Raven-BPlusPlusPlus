@@ -68,23 +68,6 @@ public abstract class MixinItemRenderer {
 
     @Shadow
     protected abstract void func_178095_a(AbstractClientPlayer clientPlayer, float equipProgress, float swingProgress);
-
-
-    @Inject(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/RenderItem;renderItemModelForEntity(Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;)V"))
-    public void renderItem(EntityLivingBase entity, ItemStack item, ItemCameraTransforms.TransformType transformType, CallbackInfo ci) {
-        try {
-            if (!(item.getItem() instanceof ItemSword)) return;
-            if (!(entity instanceof EntityPlayer)) return;
-            if (!(((EntityPlayer) entity).getItemInUseCount() > 0)) return;
-            if (!(item.getItemUseAction() == EnumAction.BLOCK)) return;
-            if (transformType != ItemCameraTransforms.TransformType.THIRD_PERSON) return;
-            GlStateManager.rotate(-45.0F, 0.0F, 1.0F, 0.0F);
-            GlStateManager.rotate(-20.0F, 1.0F, 0.0F, 0.0F);
-            GlStateManager.rotate(-60.0F, 0.0F, 0.0F, 1.0F);
-            GlStateManager.translate(-0.04F, -0.04F, 0.0F);
-        } catch (Exception e) {
-        }
-    }
     private void doSwordBlockAnimation() {
         GlStateManager.translate(-0.5F, 0.4F, -0.1F);
         GlStateManager.rotate(30.0F, 0.0F, 1.0F, 0.0F);
