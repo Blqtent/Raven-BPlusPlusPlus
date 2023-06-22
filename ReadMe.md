@@ -1,15 +1,15 @@
 # **Raven-B+++**
 
-Discord Server: https://discord.gg/ZJJRC9mBWk
+_**Discord Server: https://discord.gg/ZJJRC9mBWk
 Join if you wanna chat or get pinged when an update is out
 
-A Free Client (Made By CosmicSC) That Is Built On Top Of Raven B++, Better than Vape V4, Bypasses Anti-Cheats Like Intave , Polar & Grim
+A Free Client (Made By CosmicSC) That Is Built On Top Of Raven B++, Better than Vape V4, Bypasses Anti-Cheats Like Intave , Polar & Grim**_
 
-How To Setup The Workspace Yourself?                                                                                                                                                                                                   
-Download The SRC,
+# How To Setup The Workspace Yourself?                                                                                                                                                                                                   
+_**Download The SRC,
 Put The SRC In Some Random Folder,
 Open CMD In The Folder's Path & Type " gradlew SetupDecompWorkspace && gradlew idea "
-Open The Project In Intellij (Not Eclipse)
+Open The Project In Intellij (Not Eclipse)**_
 
 # FAQ:                                                                                                                                                                                                                         
 [Q] Gradle is not working/crashing/throwing errors
