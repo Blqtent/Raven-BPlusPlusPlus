@@ -22,6 +22,6 @@ _[A] Make an Issue on this github repo and provide a screenshot of the error._
 
 _[A] No I Would Never Do Such A Thing As Putting Rats In Minecraft utility mods (real btw not joking 100%)_
 
-_#### **[Q] My b++ configs do not work. What should I do?**_
+_### **[Q] My b++ configs do not work. What should I do?**_
 
-_#### **[A] Change your config(s) extension from .bplus -> .b+++**_
+_### **[A] Change your config(s) extension from .bplus -> .b+++**_
