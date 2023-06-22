@@ -3,7 +3,8 @@ Raven-B+++
 Discord Server: https://discord.gg/ZJJRC9mBWk
 Join if you wanna chat or get pinged when an update is out
 
-A Free Client That Is Built On Top Of Raven B++, Better than Vape V4, Bypasses Anti-Cheats Like Intave , Polar & Grim
+A Free Client (Made By CosmicSC
+) That Is Built On Top Of Raven B++, Better than Vape V4, Bypasses Anti-Cheats Like Intave , Polar & Grim
 
 How To Setup The Workspace Yourself?                                                                                                                                                                                                   
 Download The SRC,
