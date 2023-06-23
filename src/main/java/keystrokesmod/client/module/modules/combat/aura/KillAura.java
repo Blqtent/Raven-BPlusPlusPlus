@@ -65,7 +65,7 @@ public class KillAura extends Module {
         this.registerSetting(aps = new DoubleSliderSetting("Left CPS", 9, 13, 1, 60, 0.5));
         this.registerSetting(customRPS = new TickSetting("Custom Rotation Speed",false));
         this.registerSetting(rps = new SliderSetting("Rotation Speed",50,10,100,1));
-        this.registerSetting(legitAttack = new TickSetting("Legit Attack",true));
+        this.registerSetting(legitAttack = new TickSetting("Use Legit Clicker",true));
         this.registerSetting(disableWhenFlying = new TickSetting("Disable when flying", true));
         this.registerSetting(fixMovement = new TickSetting("Movement Fix", true));
         this.registerSetting(visuals = new TickSetting("Visuals",false));
