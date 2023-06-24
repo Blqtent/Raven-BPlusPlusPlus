@@ -44,13 +44,13 @@ public class GuiModule extends Module {
     }
 
     public void guiUpdate(){
-        advanced.showComponent(preset.getMode().equals(Preset.Custom));
-        customm.showComponent(preset.getMode().equals(Preset.Custom));
-        borderRGBs.showComponent(preset.getMode().equals(Preset.Custom));
-        backgroundRGBs.showComponent(preset.getMode().equals(Preset.Custom));
-        eTopRGB.showComponent(preset.getMode().equals(Preset.Custom));
-        eBottomRGB.showComponent(preset.getMode().equals(Preset.Custom) && advanced.isToggled());
-        alpha.showComponent(preset.getMode().equals(Preset.Custom));
+        advanced.hideComponent(preset.getMode().equals(Preset.Custom));
+        customm.hideComponent(preset.getMode().equals(Preset.Custom));
+        borderRGBs.hideComponent(preset.getMode().equals(Preset.Custom));
+        backgroundRGBs.hideComponent(preset.getMode().equals(Preset.Custom));
+        eTopRGB.hideComponent(preset.getMode().equals(Preset.Custom));
+        eBottomRGB.hideComponent(preset.getMode().equals(Preset.Custom) && advanced.isToggled());
+        alpha.hideComponent(preset.getMode().equals(Preset.Custom));
     }
     @Override
     public void guiButtonToggled(Setting setting) {
