@@ -34,7 +34,7 @@ public class Config {
     }
 
     public String getName() {
-        return file.getName().replace(".+++", "");
+        return file.getName().replace(".b+++", "");
     }
 
     public JsonObject getData() {
