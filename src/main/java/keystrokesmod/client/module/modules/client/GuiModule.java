@@ -20,7 +20,7 @@ public class GuiModule extends Module {
     private static TickSetting cleanUp, reset, betagui, rainbowNotification, notifications,customm,advanced;
 
     public static int guiScale;
-    private static RGBSetting borderRGBs,backgroundRGBs,eTopRGB,eBottomRGB;
+    private static RGBSetting borderRGBs,backgroundRGBs,eTopRGB,eBottomRGB,catTextRGB;
     private static SliderSetting alpha;
     public GuiModule() {
         super("Gui", ModuleCategory.client);
@@ -35,6 +35,7 @@ public class GuiModule extends Module {
         this.registerSetting(customm = new TickSetting("Custom Font",true));
         this.registerSettings(
                 alpha = new SliderSetting("Background Alpha",1,1,255,1),
+                catTextRGB = new RGBSetting("Category Text RGB",1,1,1),
                 borderRGBs = new RGBSetting("Border RGB",1,1,1),
                 backgroundRGBs = new RGBSetting("Background RGB",1,1,1),
                 advanced = new TickSetting("Advanced Enabled RGB",false),
@@ -44,6 +45,7 @@ public class GuiModule extends Module {
     }
 
     public void guiUpdate(){
+        catTextRGB.hideComponent(preset.getMode().equals(Preset.Custom));
         advanced.hideComponent(preset.getMode().equals(Preset.Custom));
         customm.hideComponent(preset.getMode().equals(Preset.Custom));
         borderRGBs.hideComponent(preset.getMode().equals(Preset.Custom));
@@ -235,27 +237,10 @@ public class GuiModule extends Module {
         return notifications.isToggled();
     }
     public enum Preset {
-        /* Vape(true, false, true, true, // showGradientEnabled - showGradientDisabled - useCustomFont -
-                // categoryBackground
-                CNColor.STATIC, // just leave this
-                // new Color(red, green, blue, alpha (optional out of 255 default is 255))
-                new Color(255, 255, 255), // categoryNameRGB
-                new Color(27, 25, 26, 255), // settingBackgroundRGB
-                new Color(27, 25, 26), // categoryBackgroundRGB
-                new Color(59, 132, 107), // enabledTopRGB
-                new Color(59, 132, 107), // enabledBottomRGB
-                new Color(250, 250, 250), // enabledTextRGB
-                new Color(27, 25, 26), // disabledTopRGB
-                new Color(27, 25, 26), // disabledBottomRGB
-                new Color(255, 255, 255), // disabledTextRGB
-                new Color(27, 25, 26), // backgroundRGBW
-                false, //rounded
-                false //swing
-                ), */
         Custom( // name
                         true, false, true, true, // showGradientEnabled - showGradientDisabled - useCustomFont -
                         CNColor.STATIC, // just leave this
-                        in -> new Color(255, 234, 0).getRGB(), // categoryNameRGB
+                        in -> catTextRGB.getRGB(), // categoryNameRGB
                         in -> new Color(backgroundRGBs.getRed(),backgroundRGBs.getGreen(),backgroundRGBs.getBlue(), (int) alpha.getInput()).getRGB(), // settingBackgroundRGB
                         in -> new Color(backgroundRGBs.getRed(),backgroundRGBs.getGreen(),backgroundRGBs.getBlue(), (int) alpha.getInput()).getRGB(), // categoryBackgroundRGB
                         in -> eTopRGB.getRGB(), // enabledTopRGB
