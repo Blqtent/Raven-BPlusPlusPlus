@@ -9,7 +9,7 @@ Download The SRC,
 
 Put The SRC In Some Random Folder,
 
-Open CMD In The Folder's Path & Type " gradlew SetupDecompWorkspace && gradlew idea "
+Open CMD In The Folder's Path & Type " gradlew -Dorg.gradle.jvmargs=-Xmx4096m setupDecompWorkspace && gradlew idea "
 
 Open The Project In Intellij (Not Eclipse)
 
