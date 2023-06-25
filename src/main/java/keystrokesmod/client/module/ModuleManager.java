@@ -73,6 +73,7 @@ public class ModuleManager {
         addModule(new SelfDestruct());
         addModule(new BridgeAssist());
         addModule(new Fullbright());
+	addModule(new NoHurtCam());
         addModule(new UpdateCheck());
         addModule(new AutoHeader());
 	addModule(new No003s());
