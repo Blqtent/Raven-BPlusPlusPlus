@@ -4,6 +4,7 @@ import keystrokesmod.client.main.Raven;
 import keystrokesmod.client.module.modules.world.AntiBot;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -32,7 +33,7 @@ public class MouseManager {
                     Utils.Player.sendMessageToSelf("rn: " + en.getName().replace("§", "%"));
                     Utils.Player.sendMessageToSelf("d: " + en.getDisplayName().getUnformattedText());
                     Utils.Player.sendMessageToSelf("rd: " + en.getDisplayName().getUnformattedText().replace("§", "%"));
-                    Utils.Player.sendMessageToSelf("b?: " + AntiBot.bot(en));
+                    Utils.Player.sendMessageToSelf("b?: " + AntiBot.bot((EntityPlayer) en));
                 }
             } else if (mouse.button == 1) {
                 addRightClick();
