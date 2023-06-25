@@ -255,7 +255,7 @@ public class GuiModule extends Module {
                         true, //boarder
                         in -> 0x99808080,
                         in -> borderRGBs.getRGB(),
-                        in -> Utils.Client.otherAstolfoColorsDraw(in, 10)
+                        in -> borderRGBs.getRGB()
                         ),
         Vape( // name
                 true, false, true, true, // showGradientEnabled - showGradientDisabled - useCustomFont -
