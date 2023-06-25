@@ -606,7 +606,7 @@ public class Utils {
         }
 
         public static int getColorBetween(int min, int max, int delay) {
-            int c = (int) Math.abs((((System.currentTimeMillis() / 10) + delay) % (2 * (max - min))) - (max - min))
+            int c = (int) Math.abs((((System.currentTimeMillis() / 10) + delay) % (2L * (max - min))) - (max - min))
                     + min;
             // System.out.println(Math.abs((System.currentTimeMillis() % (2 * (max-min)) -
             // (max-min))) + min);
