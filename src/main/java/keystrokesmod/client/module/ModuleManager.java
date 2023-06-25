@@ -19,6 +19,7 @@ import keystrokesmod.client.module.modules.render.*;
 import keystrokesmod.client.module.modules.world.*;
 import keystrokesmod.client.module.modules.client.*;
 import keystrokesmod.client.utils.Utils;
+import keystrokesmod.client.utils.font.FontUtil;
 import net.minecraft.client.gui.FontRenderer;
 
 public class ModuleManager {
@@ -59,11 +60,12 @@ public class ModuleManager {
         addModule(new AntiBot());
         addModule(new Chams());
         addModule(new ChestESP());
-	addModule(new ClientSpoof());
+	    addModule(new ClientSpoof());
         addModule(new Nametags());
         addModule(new PlayerESP());
         addModule(new Tracers());
         addModule(new HUD());
+        addModule(new NoHurtCam());
         addModule(new SlyPort());
         addModule(new FakeChat());
         addModule(new WaterBucket());
@@ -73,7 +75,6 @@ public class ModuleManager {
         addModule(new SelfDestruct());
         addModule(new BridgeAssist());
         addModule(new Fullbright());
-	addModule(new NoHurtCam());
         addModule(new UpdateCheck());
         addModule(new AutoHeader());
 	addModule(new No003s());
@@ -200,6 +201,15 @@ public class ModuleManager {
 			if (mod.isEnabled())
 				if (fr.getStringWidth(mod.getName()) > length)
 					length = fr.getStringWidth(mod.getName());
+        return length;
+    }
+
+    public int getLongestActiveModuleCustom() {
+        int length = 0;
+        for (Module mod : modules)
+            if (mod.isEnabled())
+                if (FontUtil.two.getStringWidth(mod.getName()) > length)
+                    length = (int) FontUtil.two.getStringWidth(mod.getName());
         return length;
     }
 
