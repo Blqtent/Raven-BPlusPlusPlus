@@ -2,6 +2,7 @@ package keystrokesmod.client.mixin.mixins;
 
 import java.util.List;
 
+import keystrokesmod.client.module.modules.other.NoHurtCam;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -262,7 +263,8 @@ public class MixinEntityRenderer {
     //@author Cosmic
     @Inject(method = "hurtCameraEffect", at = @At("HEAD"), cancellable = true)
     public void hurtCameraEffect(CallbackInfo callbackInfo) {
-        callbackInfo.cancel();
+        if (Raven.moduleManager.getModuleByClazz(NoHurtCam.class).isEnabled())
+            callbackInfo.cancel();
     }
 
     /**
