@@ -1,4 +1,4 @@
-package keystrokesmod.client.module.modules.combat.aura;
+package keystrokesmod.client.module.modules.combat;
 
 import java.awt.Color;
 import java.util.List;
