@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import keystrokesmod.client.event.impl.*;
-import keystrokesmod.client.module.setting.Setting;
 import keystrokesmod.client.utils.CombatUtils;
 import keystrokesmod.client.utils.MillisTimer;
 import net.minecraft.client.settings.KeyBinding;
@@ -52,7 +51,7 @@ public class KillAura extends Module {
     MillisTimer clickTimer = new MillisTimer();
     public static SliderSetting reach,rps;
     private DoubleSliderSetting aps;
-    private TickSetting disableWhenFlying, fixMovement,legitAttack,visuals,customRPS;
+    private final TickSetting fixMovement,legitAttack,visuals,customRPS,weaponOnly;
     public static ComboSetting<BlockMode> blockMode;
     /**
      * @Author Cosmic-SC
@@ -66,20 +65,16 @@ public class KillAura extends Module {
         this.registerSetting(customRPS = new TickSetting("Custom Rotation Speed",false));
         this.registerSetting(rps = new SliderSetting("Rotation Speed",50,10,100,1));
         this.registerSetting(legitAttack = new TickSetting("Use Legit Clicker",true));
-        this.registerSetting(disableWhenFlying = new TickSetting("Disable when flying", true));
+        this.registerSetting(weaponOnly = new TickSetting("Weapon Only",false));
         this.registerSetting(fixMovement = new TickSetting("Movement Fix", true));
         this.registerSetting(visuals = new TickSetting("Visuals",false));
-        this.registerSetting(blockMode = new ComboSetting<BlockMode>("Block mode", BlockMode.Legit));
+        this.registerSetting(blockMode = new ComboSetting<>("Block mode", BlockMode.Legit));
     }
     @Subscribe
     public void gameLoopEvent(GameLoopEvent e) {
         try {
             EntityPlayer pTarget = Targets.getTarget();
-            if (
-                    (pTarget == null)
-                            || (mc.currentScreen != null)
-                            || !coolDown.hasFinished()
-                            || !(!disableWhenFlying.isToggled() || !mc.thePlayer.capabilities.isFlying)) {
+            if ((pTarget == null) || (mc.currentScreen != null) || !coolDown.hasFinished() || (weaponOnly.isToggled() && !Utils.Player.isPlayerHoldingWeapon())) {
                 target = null;
                 rotate(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch, true);
                 return;
@@ -291,11 +286,8 @@ public class KillAura extends Module {
         this.updateVals();
     }
 
-    @Override
-    public void guiButtonToggled(Setting b) {
-        if(b == customRPS) {
-            rps.hideComponent(customRPS.isToggled());
-        }
+    public void guiUpdate() {
+        rps.hideComponent(customRPS.isToggled());
     }
     private void updateVals() {
         stopClicker = false;
