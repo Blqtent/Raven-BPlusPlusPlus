@@ -49,7 +49,7 @@ public class ConfigCommand extends Command {
 
             } else if (args[0].equalsIgnoreCase("save")) {
                 Terminal.print("Saving...");
-                Raven.configManager.copyConfig(Raven.configManager.getConfig(), args[1] + ".b+++");
+                Raven.configManager.copyConfig(Raven.configManager.getConfig(), args[1] + ".raven");
                 Terminal.print("Saved as \"" + args[1] + "\"! To load the config, run \"config load " + args[1] + "\"");
                 Raven.configManager.discoverConfigs();
             } else if (args[0].equalsIgnoreCase("remove")) {
