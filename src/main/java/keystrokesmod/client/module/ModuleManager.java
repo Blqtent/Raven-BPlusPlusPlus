@@ -9,7 +9,6 @@ import keystrokesmod.client.module.Module.ModuleCategory;
 import keystrokesmod.client.module.modules.HUD;
 import keystrokesmod.client.module.modules.client.GuiModule;
 import keystrokesmod.client.module.modules.combat.*;
-import keystrokesmod.client.module.modules.combat.KillAura;
 import keystrokesmod.client.module.modules.config.ConfigSettings;
 import keystrokesmod.client.module.modules.hotkey.Blocks;
 import keystrokesmod.client.module.modules.movement.*;
@@ -50,7 +49,6 @@ public class ModuleManager {
         addModule(new LegitSpeed());
         addModule(new Timer());
         addModule(new VClip());
-        addModule(new AutoJump());
         addModule(new AutoPlace());
         addModule(new BedAura());
         addModule(new FastPlace());
@@ -69,13 +67,13 @@ public class ModuleManager {
         addModule(new SlyPort());
         addModule(new FakeChat());
         addModule(new WaterBucket());
+        // addModule(new AutoConfig());
         addModule(new Terminal());
         addModule(new GuiModule());
         addModule(new SelfDestruct());
         addModule(new BridgeAssist());
         addModule(new Fullbright());
         addModule(new UpdateCheck());
-        addModule(new AutoHeader());
         addModule(new No003s());
         addModule(new AutoTool());
         addModule(new Blocks());
@@ -83,7 +81,7 @@ public class ModuleManager {
         addModule(new InstantStop());
         addModule(new BlockHit());
         addModule(new AutoWeapon());
-        addModule(new AutoBlock());
+
         addModule(new MiddleClick());
         addModule(new Projectiles());
         addModule(new FakeHud());
@@ -91,6 +89,9 @@ public class ModuleManager {
         addModule(new JumpReset());
         addModule(new KillAura());
         addModule(new Targets());
+
+        // why ?
+        // idk dude. you tell me why. I am pretty sure this was blowsy's work.
         initialized = true;
     }
 
