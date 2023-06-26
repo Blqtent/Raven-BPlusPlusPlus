@@ -130,7 +130,7 @@ public class ModuleComponent extends Component {
                 mod.toggle();
                 return;
             }
-            else if (b == 1) {
+            else if ((b == 1) && !this.settings.isEmpty()) {
                 category.setOpenModule(category.getOpenModule() == this ? null : this);
                 int yOffset = 0;
                 if(category.getOpenModule() == this) {
