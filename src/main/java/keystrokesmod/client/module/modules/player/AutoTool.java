@@ -5,6 +5,7 @@ import keystrokesmod.client.event.impl.Render2DEvent;
 import keystrokesmod.client.main.Raven;
 import keystrokesmod.client.module.Module;
 import keystrokesmod.client.module.modules.combat.LeftClicker;
+import keystrokesmod.client.module.setting.impl.DescriptionSetting;
 import keystrokesmod.client.module.setting.impl.DoubleSliderSetting;
 import keystrokesmod.client.module.setting.impl.TickSetting;
 import keystrokesmod.client.utils.CoolDown;
@@ -21,21 +22,13 @@ import org.lwjgl.input.Mouse;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class AutoTool extends Module {
-    private final TickSetting hotkeyBack;
-    private Block previousBlock;
     private boolean isWaiting;
-    public static DoubleSliderSetting mineDelay;
-    public static int previousSlot;
     public static boolean justFinishedMining, mining;
     public static CoolDown delay;
-    // public static List<Block> pickaxe = Arrays.asList(ItemBlock.class,
-    // BlockIce.class);
 
     public AutoTool() {
         super("Auto Tool", ModuleCategory.player);
-
-        this.registerSetting(hotkeyBack = new TickSetting("Hotkey back", true));
-        this.registerSetting(mineDelay = new DoubleSliderSetting("Max delay", 10, 50, 0, 2000, 1));
+        this.registerSetting(new DescriptionSetting("Autotool."));
         delay = new CoolDown(0);
     }
 
@@ -63,47 +56,11 @@ public class AutoTool extends Module {
 
         BlockPos lookingAtBlock = mc.objectMouseOver.getBlockPos();
         if (lookingAtBlock != null) {
-
-            Block stateBlock = mc.theWorld.getBlockState(lookingAtBlock).getBlock();
-            if (stateBlock != Blocks.air && !(stateBlock instanceof BlockLiquid) && stateBlock != null) {
-
-                if (mineDelay.getInputMax() > 0) {
-                    if (previousBlock != null) {
-                        if (previousBlock != stateBlock) {
-                            previousBlock = stateBlock;
-                            isWaiting = true;
-                            delay.setCooldown((long) ThreadLocalRandom.current().nextDouble(mineDelay.getInputMin(),
-                                    mineDelay.getInputMax() + 0.01));
-                            delay.start();
-                        } else {
-                            if (isWaiting && delay.hasFinished()) {
-                                isWaiting = false;
-                                previousSlot = Utils.Player.getCurrentPlayerSlot();
-                                mining = true;
-                                hotkeyToFastest();
-                            }
-                        }
-                    } else {
-                        previousBlock = stateBlock;
-                        isWaiting = false;
-                    }
-                    return;
-                }
-
-                if (!mining) {
-                    previousSlot = Utils.Player.getCurrentPlayerSlot();
-                    mining = true;
-                }
-
-                hotkeyToFastest();
-            }
+            hotkeyToFastest();
         }
     }
 
     public void finishMining() {
-        if (hotkeyBack.isToggled()) {
-            Utils.Player.hotkeyToSlot(previousSlot);
-        }
         justFinishedMining = false;
         mining = false;
     }
