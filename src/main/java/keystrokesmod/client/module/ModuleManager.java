@@ -183,9 +183,9 @@ public class ModuleManager {
 
     public void sortLongShort() {
         if (HUD.customFont.isToggled()) {
-            modules.sort(Comparator.comparingInt(o2 -> Utils.mc.fontRendererObj.getStringWidth(o2.getName())));
-        } else {
             modules.sort(Comparator.comparingInt(o2 -> (int) FontUtil.two.getStringWidth(o2.getName())));
+        } else {
+            modules.sort(Comparator.comparingInt(o2 -> Utils.mc.fontRendererObj.getStringWidth(o2.getName())));
         }
     }
 
