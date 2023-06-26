@@ -3,6 +3,7 @@ package keystrokesmod.client.module.modules.combat;
 import keystrokesmod.client.main.Raven;
 import keystrokesmod.client.module.Module;
 import keystrokesmod.client.module.setting.impl.DoubleSliderSetting;
+import keystrokesmod.client.module.modules.combat.KillAura;
 import keystrokesmod.client.module.setting.impl.TickSetting;
 import keystrokesmod.client.utils.Utils;
 
