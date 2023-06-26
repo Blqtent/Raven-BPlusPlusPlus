@@ -5,7 +5,7 @@ import keystrokesmod.client.event.impl.UpdateEvent;
 import keystrokesmod.client.main.Raven;
 import keystrokesmod.client.module.Module;
 import keystrokesmod.client.module.modules.client.Targets;
-import keystrokesmod.client.module.modules.combat.aura.KillAura;
+import keystrokesmod.client.module.modules.combat.KillAura;
 import keystrokesmod.client.module.setting.impl.TickSetting;
 import keystrokesmod.client.utils.Utils;
 import net.minecraft.client.entity.EntityPlayerSP;

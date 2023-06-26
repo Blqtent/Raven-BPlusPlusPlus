@@ -12,7 +12,6 @@ import keystrokesmod.client.main.Raven;
 import keystrokesmod.client.module.Module;
 import keystrokesmod.client.module.modules.client.Targets;
 import keystrokesmod.client.module.modules.player.RightClicker;
-import keystrokesmod.client.module.modules.combat.aura.KillAura;
 import keystrokesmod.client.module.setting.impl.DescriptionSetting;
 import keystrokesmod.client.module.setting.impl.SliderSetting;
 import keystrokesmod.client.module.setting.impl.TickSetting;
@@ -21,7 +20,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -93,7 +91,7 @@ public class AimAssist extends Module { //TODO: Patch GCD
                                             .nextDouble(speedYaw.getInput() - 4.723847, speedYaw.getInput())))));
                                     mc.thePlayer.rotationYaw += val;
                                     
-                                    //Bypass for anticheats with rotation checks xd
+                                    //Bypass for anticheats with rotation checks xd - ok
                                     mc.thePlayer.rotationPitch += Math.random() * 0.2 - 0.1;
                                     mc.thePlayer.rotationPitch = Math.max(mc.thePlayer.rotationPitch, -90);
                                     mc.thePlayer.rotationPitch = Math.min(mc.thePlayer.rotationPitch, 90);

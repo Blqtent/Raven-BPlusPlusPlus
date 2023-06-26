@@ -1,7 +1,7 @@
 package keystrokesmod.client.utils;
 
 import com.google.common.base.Predicates;
-import keystrokesmod.client.module.modules.combat.aura.KillAura;
+import keystrokesmod.client.module.modules.combat.KillAura;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;

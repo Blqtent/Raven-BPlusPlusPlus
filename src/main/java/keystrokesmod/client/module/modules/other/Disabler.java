@@ -26,16 +26,7 @@ public class Disabler extends Module {
     public Disabler() {
         super("Disabler", ModuleCategory.other);
 
-        this.registerSetting(warning = new DescriptionSetting("WILL BAN DONT USE"));
-        this.registerSetting(mode = new ComboSetting("Mode", Mode.MMCSafe));
-        this.registerSetting(
-                mmcSafeWarning1 = new DescriptionSetting(EnumChatFormatting.GRAY + "Difference between min and max"));
-        this.registerSetting(
-                mmcSafeWarning2 = new DescriptionSetting(EnumChatFormatting.GRAY + "should be less than 5."));
-        this.registerSetting(mmcSafeDelay = new DoubleSliderSetting("MMCSafe Delay", 77, 80, 10, 200, 1));
-
-        this.registerSetting(new DescriptionSetting(
-                EnumChatFormatting.BOLD.toString() + EnumChatFormatting.AQUA + "GHOST CLIENT WITH DISABLER OP"));
+        this.registerSetting(mode = new ComboSetting("Mode", Mode.None));
 
     }
 
@@ -47,31 +38,15 @@ public class Disabler extends Module {
     @Subscribe
     public void onPacket(PacketEvent e) {
         switch ((Mode) mode.getMode()) {
-        case MMCSafe:
+        case None:
             if (e.isOutgoing() && !mmc) {
-                if (e.getPacket() instanceof C00PacketKeepAlive) {
-                    mmcPackets.add(e.getPacket());
-                    e.cancel();
-                }
 
-                if (e.getPacket() instanceof C0FPacketConfirmTransaction) {
-                    mmcPackets.add(e.getPacket());
-                    e.cancel();
-                }
-
-                int packetsCap = Utils.Java.randomInt(mmcSafeDelay.getInputMin(), mmcSafeDelay.getMax());
-
-                while (mmcPackets.size() >= packetsCap) {
-                    mmc = true;
-                    mc.thePlayer.sendQueue.addToSendQueue(mmcPackets.poll());
-                }
-                mmc = false;
             }
             break;
         }
     }
 
     public enum Mode {
-        MMCSafe
+        None
     }
 }
