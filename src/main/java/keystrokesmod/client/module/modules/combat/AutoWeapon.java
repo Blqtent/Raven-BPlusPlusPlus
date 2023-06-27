@@ -24,12 +24,13 @@ public class AutoWeapon extends Module {
             }
         }
     }
+    
     private void hotkeyToSword() {
         for (int slot = 0; slot <= 8; slot++) {
             ItemStack itemInSlot = mc.thePlayer.inventory.getStackInSlot(slot);
-            if (itemInSlot != null && itemInSlot.getItem() instanceof ItemSword) {
-                if (mc.thePlayer.inventory.currentItem != slot) {
-                    mc.thePlayer.inventory.currentItem = slot;
+            if (itemInSlot != null && (itemInSlot.getItem() instanceof ItemSword || itemInSlot.getItem() instanceof ItemAxe)) {
+                if (mc.thePlayer.inventory.currentItem != Utils.Player.getMaxDamageSlot()) {
+                    mc.thePlayer.inventory.currentItem = Utils.Player.getMaxDamageSlot();
                 }
             }
         }
