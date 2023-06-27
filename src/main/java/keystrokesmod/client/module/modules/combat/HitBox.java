@@ -30,26 +30,13 @@ public class HitBox extends Module {
         this.registerSetting(b = new TickSetting("Vertical", false));
     }
 
-    /*
-    @Subscribe
-    public void onRenderWorldLast(ForgeEvent fe) {
-        if (fe.getEvent() instanceof RenderWorldLastEvent) {
-            if (b.isToggled() && Utils.Player.isPlayerInGame()) {
-                for (Entity en : mc.theWorld.loadedEntityList) {
-                    if (en != mc.thePlayer && en instanceof EntityLivingBase && ((EntityLivingBase) en).deathTime == 0
-                            && !(en instanceof EntityArmorStand) && !en.isInvisible()) {
-                        this.rh(en, Color.WHITE);
-                    }
-                }
-            }
-        }
-    }
-
-     */
-
     public static double exp(Entity en) {
-        Module hitBox = Raven.moduleManager.getModuleByClazz(HitBox.class);
-        return ((hitBox != null) && hitBox.isEnabled() && !AntiBot.bot((EntityPlayer) en)) ? a.getInput() : 0D;
+        try {
+            Module hitBox = Raven.moduleManager.getModuleByClazz(HitBox.class);
+            return ((hitBox != null) && hitBox.isEnabled() && !AntiBot.bot((EntityPlayer) en)) ? a.getInput() : 0D;
+        } catch (Exception e){
+            return 0D;
+        }
     }
 
     private void rh(Entity e, Color c) {
