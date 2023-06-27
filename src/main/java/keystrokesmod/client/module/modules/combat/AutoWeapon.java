@@ -16,7 +16,7 @@ public class AutoWeapon extends Module {
         this.registerSetting(new DescriptionSetting("AutoWeapon."));
     }
 
-    /*@Subscribe
+    @Subscribe
     public void onAttack(ForgeEvent e){
         if (e.getEvent() instanceof AttackEntityEvent) {
             if (isPlayerInGame()) {
@@ -25,8 +25,13 @@ public class AutoWeapon extends Module {
         }
     }
     private void hotkeyToSword() {
-        if (mc.thePlayer.inventory.currentItem != Utils.Player.getMaxDamageSlot()) {
-            mc.thePlayer.inventory.currentItem = Utils.Player.getMaxDamageSlot();
+        for (int slot = 0; slot <= 8; slot++) {
+            ItemStack itemInSlot = mc.thePlayer.inventory.getStackInSlot(slot);
+            if (itemInSlot != null && itemInSlot.getItem() instanceof ItemSword) {
+                if (mc.thePlayer.inventory.currentItem != slot) {
+                    mc.thePlayer.inventory.currentItem = slot;
+                }
+            }
         }
-    }*/
+    }
 }
