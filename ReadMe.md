@@ -24,4 +24,4 @@ _[A] No I Would Never Do Such A Thing As Putting Rats In Minecraft utility mods 
 
 ### _**[Q] My b++ configs do not work. What should I do?**_
 
-### _**[A] Change your config(s) extension from .bplus -> .b+++**_
+### _**[A] Change your config(s) extension from .bplus -> .raven**_
