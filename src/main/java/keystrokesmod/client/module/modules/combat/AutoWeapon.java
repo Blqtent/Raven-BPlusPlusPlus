@@ -16,7 +16,7 @@ public class AutoWeapon extends Module {
         this.registerSetting(new DescriptionSetting("AutoWeapon."));
     }
 
-    @Subscribe
+    /*@Subscribe
     public void onAttack(ForgeEvent e){
         if (e.getEvent() instanceof AttackEntityEvent) {
             if (isPlayerInGame()) {
@@ -28,5 +28,5 @@ public class AutoWeapon extends Module {
         if (mc.thePlayer.inventory.currentItem != Utils.Player.getMaxDamageSlot()) {
             mc.thePlayer.inventory.currentItem = Utils.Player.getMaxDamageSlot();
         }
-    }
+    }*/
 }
