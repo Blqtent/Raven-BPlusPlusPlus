@@ -36,9 +36,10 @@ public class Targets extends Module {
                         teams = new TickSetting("Target teammates", false),
                         invis = new TickSetting("Target invis", false),
                         bots = new TickSetting("Target bots", false),
-                        naked = new TickSetting("Target naked", false),
+                        naked = new TickSetting("Target Un-Armoured", false),
                         fov = new SliderSetting("General Fov", 180, 0, 360, 1),
-                        auraFov = new SliderSetting("Aura Fov", 360, 0, 360, 1),                        distance = new SliderSetting("Distance", 3.5, 0, 10, 0.1),
+                        auraFov = new SliderSetting("Aura Fov", 360, 0, 360, 1),    
+                        distance = new SliderSetting("Distance", 3.5, 0, 10, 0.1),
                         sortMode = new ComboSetting("Sort mode", SortMode.Distance),
                         lockDist = new SliderSetting("Lock distance", 4, 0, 10, 0.1),
                         debug = new TickSetting("debug", false)
