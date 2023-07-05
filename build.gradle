@@ -38,7 +38,6 @@ minecraft {
     runDir = "run"
 
     mappings = "stable_20"
-    //clientJvmArgs += "-Dfml.coreMods.load=keystrokesmod.sToNkS.tweaker.FMLLoadingPlugin"
     clientJvmArgs += '-Dfml.coreMods.load=keystrokesmod.client.mixin.MixinLoader'
 }
 
@@ -105,15 +104,6 @@ processResources {
     rename "(.+_at.cfg)", "META-INF/\$1"
 }
 
-
-/*
-// for people who want stable - not yet functional for MC 1.8.8 - we require the forgegradle 2.1 snapshot
-plugins {
-    id "net.minecraftforge.gradle.forge" version "2.0.2"
-}
-*/
-
-/* -Dfml.coreMods.load=keystrokesmod.sToNkS.tweaker.FMLLoadingPlugin*/
 jar {
     from(configurations.embed.collect {
         it.isDirectory() ? it : zipTree(it)
@@ -138,27 +128,3 @@ jar {
         )
     }
 }
-
-/*
-shadowJar {
-    manifest {
-        attributes(
-                'MixinConfigs': 'mixins.keystrokesmod.json',
-                'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
-                'TweakOrder': 0,
-                "FMLCorePlugin": "keystrokesmod.client.mixin.Mixinloader",
-                "ForceLoadAsMod": true,
-                'FMLCorePluginContainsFMLMod': true,
-                "ModSide": "CLIENT"
-        )
-    }
-}
-
- */
-
-/*
-reobf {
-    shadowJar {} // Reobfuscate the shadowed JAR
-}
-
- */
