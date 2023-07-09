@@ -344,17 +344,29 @@ public class Utils {
                         - (mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight());
             } else
                 diffY = (((q.getEntityBoundingBox().minY + q.getEntityBoundingBox().maxY) / 2.0D) + ps)
-                - (mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight());
+                        - (mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight());
 
             double diffZ = q.posZ - mc.thePlayer.posZ;
             double dist = MathHelper.sqrt_double((diffX * diffX) + (diffZ * diffZ));
             float yaw = (float) ((Math.atan2(diffZ, diffX) * 180.0D) / 3.141592653589793D) - 90.0F;
             float pitch = (float) (-((Math.atan2(diffY, dist) * 180.0D) / 3.141592653589793D));
-            return new float[] {
-                    mc.thePlayer.rotationYaw + MathHelper.wrapAngleTo180_float(yaw - mc.thePlayer.rotationYaw),
-                    mc.thePlayer.rotationPitch
-                    + MathHelper.wrapAngleTo180_float(pitch - mc.thePlayer.rotationPitch) };
+            float correctYaw = mc.thePlayer.rotationYaw + MathHelper.wrapAngleTo180_float(yaw - mc.thePlayer.rotationYaw);
+            float correctPitch = mc.thePlayer.rotationPitch + MathHelper.wrapAngleTo180_float(pitch - mc.thePlayer.rotationPitch);
+            correctYaw += getRandom(-2, 2);
+            correctPitch = MathHelper.clamp_float(correctPitch, -90, 90);
+            correctPitch += getRandom(-1,1);
+            return new float[]{correctYaw, correctPitch};
             // tf is happening here
+        }
+        public static double getRandom(double min, double max) {
+            if (min == max) {
+                return min;
+            } else if (min > max) {
+                final double d = min;
+                min = max;
+                max = d;
+            }
+            return ThreadLocalRandom.current().nextDouble(min, max);
         }
 
         public static void fixMovementSpeed(double s, boolean m) {
