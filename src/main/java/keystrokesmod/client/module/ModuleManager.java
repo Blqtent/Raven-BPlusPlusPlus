@@ -41,6 +41,7 @@ public class ModuleManager {
         addModule(new HitBox());
         addModule(new Reach());
         addModule(new Velocity());
+        addModule(new Disabler());
         addModule(new Fly());
         addModule(new InvMove());
         addModule(new KeepSprint());
@@ -67,7 +68,6 @@ public class ModuleManager {
         addModule(new SlyPort());
         addModule(new FakeChat());
         addModule(new WaterBucket());
-        // addModule(new AutoConfig());
         addModule(new Terminal());
         addModule(new GuiModule());
         addModule(new SelfDestruct());
@@ -78,10 +78,10 @@ public class ModuleManager {
         addModule(new AutoTool());
         addModule(new Blocks());
         addModule(new WTap());
+        addModule(new BHop());
         addModule(new InstantStop());
         addModule(new BlockHit());
         addModule(new AutoWeapon());
-
         addModule(new MiddleClick());
         addModule(new Projectiles());
         addModule(new FakeHud());

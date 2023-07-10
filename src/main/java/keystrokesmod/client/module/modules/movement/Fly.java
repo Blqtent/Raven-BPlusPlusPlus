@@ -5,6 +5,7 @@ import keystrokesmod.client.event.impl.TickEvent;
 import keystrokesmod.client.module.Module;
 import keystrokesmod.client.module.setting.impl.DescriptionSetting;
 import keystrokesmod.client.module.setting.impl.SliderSetting;
+import keystrokesmod.client.utils.MoveUtil;
 import keystrokesmod.client.utils.Utils;
 import net.minecraft.client.Minecraft;
 
@@ -123,6 +124,7 @@ public class Fly extends Module {
             Module.mc.thePlayer.motionY = 0.0D;
             Module.mc.thePlayer.capabilities.setFlySpeed((float) (0.05000000074505806D * b.getInput()));
             Module.mc.thePlayer.capabilities.isFlying = true;
+            MoveUtil.strafe(0.25);
         }
     }
 }

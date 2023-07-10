@@ -8,45 +8,50 @@ import keystrokesmod.client.module.setting.impl.DescriptionSetting;
 import keystrokesmod.client.module.setting.impl.DoubleSliderSetting;
 import keystrokesmod.client.utils.Utils;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.C00PacketKeepAlive;
-import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
+import net.minecraft.network.play.client.*;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.LinkedList;
 
+import static keystrokesmod.client.module.modules.other.Disabler.Mode.Vulcan;
+
 public class Disabler extends Module {
-    public static DescriptionSetting warning, mmcSafeWarning1, mmcSafeWarning2;
     public static ComboSetting mode;
-    public static DoubleSliderSetting mmcSafeDelay;
-    public static
-
-    LinkedList<Packet<?>> mmcPackets = new LinkedList<>();
-    boolean mmc;
-
+    private int packetPlayers = 0;
     public Disabler() {
         super("Disabler", ModuleCategory.other);
-
-        this.registerSetting(mode = new ComboSetting("Mode", Mode.None));
-
+        this.registerSetting(mode = new ComboSetting("Mode", Mode.Vulcan));
     }
-
-    @Override
-    public void onEnable() {
-        mmcPackets.clear();
-    }
-
     @Subscribe
     public void onPacket(PacketEvent e) {
         switch ((Mode) mode.getMode()) {
-        case None:
-            if (e.isOutgoing() && !mmc) {
+            case Vulcan:
+                // autoblock - doesnt work
+                if (e.isOutgoing()) {
+                    if (e.getPacket() instanceof C17PacketCustomPayload) {
+                        e.setCancelled(true);
+                    }
+                // strafe
+                    if (e.getPacket() instanceof C03PacketPlayer) {
+                        packetPlayers++;
 
-            }
-            break;
+                        if (packetPlayers >= 6) {
+                            mc.getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK,
+                                            new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ) , EnumFacing.DOWN));
+                        } else if (packetPlayers == 4) {
+                            mc.getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.START_DESTROY_BLOCK,
+                                    BlockPos.ORIGIN, EnumFacing.DOWN));
+                        }
+                    }
+
+                }
+                break;
         }
     }
-
     public enum Mode {
-        None
+        Vulcan
     }
 }

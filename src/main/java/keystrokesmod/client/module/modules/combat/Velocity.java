@@ -59,13 +59,6 @@ public class Velocity extends Module {
                     }
                 }
 
-                if (c.getInput() != 100.0D) {
-                    double ch = Math.random();
-                    if (ch >= c.getInput() / 100.0D) {
-                        return;
-                    }
-                }
-
                 if (a.getInput() != 100.0D) {
                     mc.thePlayer.motionX *= a.getInput() / 100.0D;
                     mc.thePlayer.motionZ *= a.getInput() / 100.0D;

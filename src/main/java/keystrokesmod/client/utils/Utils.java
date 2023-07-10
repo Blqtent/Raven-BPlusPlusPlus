@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
@@ -121,7 +122,7 @@ public class Utils {
 
                 float f = 1.0F;
                 List<Entity> list = mc.theWorld.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().addCoord(vec31.xCoord * reach,
-                        vec31.yCoord * reach, vec31.zCoord * reach).expand(f, f, f),
+                                vec31.yCoord * reach, vec31.zCoord * reach).expand(f, f, f),
                         Predicates.and(EntitySelectors.NOT_SPECTATING, Entity::canBeCollidedWith));
                 double d2 = distanceToVec;
 
@@ -352,7 +353,6 @@ public class Utils {
             float pitch = (float) (-((Math.atan2(diffY, dist) * 180.0D) / 3.141592653589793D));
             float correctYaw = mc.thePlayer.rotationYaw + MathHelper.wrapAngleTo180_float(yaw - mc.thePlayer.rotationYaw);
             float correctPitch = mc.thePlayer.rotationPitch + MathHelper.wrapAngleTo180_float(pitch - mc.thePlayer.rotationPitch);
-            correctYaw += getRandom(-1, 1);
             correctPitch = MathHelper.clamp_float(correctPitch, -90, 90);
             correctPitch += getRandom(-1,1);
             return new float[]{correctYaw, correctPitch};
@@ -459,9 +459,9 @@ public class Utils {
             EntityPlayerSP p = mc.thePlayer;
             int armSwingEnd = p.isPotionActive(Potion.digSpeed)
                     ? 6 - (1 + p.getActivePotionEffect(Potion.digSpeed).getAmplifier())
-                            : (p.isPotionActive(Potion.digSlowdown)
-                                    ? 6 + ((1 + p.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2)
-                                            : 6);
+                    : (p.isPotionActive(Potion.digSlowdown)
+                    ? 6 + ((1 + p.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2)
+                    : 6);
             if (!p.isSwingInProgress || (p.swingProgressInt >= (armSwingEnd / 2)) || (p.swingProgressInt < 0)) {
                 p.swingProgressInt = -1;
                 p.isSwingInProgress = true;
@@ -496,8 +496,8 @@ public class Utils {
             List<EntityPlayer> players = new ArrayList<>();
 
             for(EntityPlayer player : mc.theWorld.playerEntities)
-            	if(mc.thePlayer.getDistanceToEntity(player) < dis)
-            		players.add(player);
+                if(mc.thePlayer.getDistanceToEntity(player) < dis)
+                    players.add(player);
 
             return players;
         }
@@ -1057,40 +1057,40 @@ public class Utils {
                 }
 
                 switch (dm) {
-                case OVERALL:
-                    s[0] = getValueAsInt(d, "wins");
-                    s[1] = getValueAsInt(d, "losses");
-                    s[2] = getValueAsInt(d, "current_winstreak");
-                    break;
-                case BRIDGE:
-                    s[0] = getValueAsInt(d, "bridge_duel_wins");
-                    s[1] = getValueAsInt(d, "bridge_duel_losses");
-                    s[2] = getValueAsInt(d, "current_winstreak_mode_bridge_duel");
-                    break;
-                case UHC:
-                    s[0] = getValueAsInt(d, "uhc_duel_wins");
-                    s[1] = getValueAsInt(d, "uhc_duel_losses");
-                    s[2] = getValueAsInt(d, "current_winstreak_mode_uhc_duel");
-                    break;
-                case SKYWARS:
-                    s[0] = getValueAsInt(d, "sw_duel_wins");
-                    s[1] = getValueAsInt(d, "sw_duel_losses");
-                    s[2] = getValueAsInt(d, "current_winstreak_mode_sw_duel");
-                    break;
-                case CLASSIC:
-                    s[0] = getValueAsInt(d, "classic_duel_wins");
-                    s[1] = getValueAsInt(d, "classic_duel_losses");
-                    s[2] = getValueAsInt(d, "current_winstreak_mode_classic_duel");
-                    break;
-                case SUMO:
-                    s[0] = getValueAsInt(d, "sumo_duel_wins");
-                    s[1] = getValueAsInt(d, "sumo_duel_losses");
-                    s[2] = getValueAsInt(d, "current_winstreak_mode_sumo_duel");
-                    break;
-                case OP:
-                    s[0] = getValueAsInt(d, "op_duel_wins");
-                    s[1] = getValueAsInt(d, "op_duel_losses");
-                    s[2] = getValueAsInt(d, "current_winstreak_mode_op_duel");
+                    case OVERALL:
+                        s[0] = getValueAsInt(d, "wins");
+                        s[1] = getValueAsInt(d, "losses");
+                        s[2] = getValueAsInt(d, "current_winstreak");
+                        break;
+                    case BRIDGE:
+                        s[0] = getValueAsInt(d, "bridge_duel_wins");
+                        s[1] = getValueAsInt(d, "bridge_duel_losses");
+                        s[2] = getValueAsInt(d, "current_winstreak_mode_bridge_duel");
+                        break;
+                    case UHC:
+                        s[0] = getValueAsInt(d, "uhc_duel_wins");
+                        s[1] = getValueAsInt(d, "uhc_duel_losses");
+                        s[2] = getValueAsInt(d, "current_winstreak_mode_uhc_duel");
+                        break;
+                    case SKYWARS:
+                        s[0] = getValueAsInt(d, "sw_duel_wins");
+                        s[1] = getValueAsInt(d, "sw_duel_losses");
+                        s[2] = getValueAsInt(d, "current_winstreak_mode_sw_duel");
+                        break;
+                    case CLASSIC:
+                        s[0] = getValueAsInt(d, "classic_duel_wins");
+                        s[1] = getValueAsInt(d, "classic_duel_losses");
+                        s[2] = getValueAsInt(d, "current_winstreak_mode_classic_duel");
+                        break;
+                    case SUMO:
+                        s[0] = getValueAsInt(d, "sumo_duel_wins");
+                        s[1] = getValueAsInt(d, "sumo_duel_losses");
+                        s[2] = getValueAsInt(d, "current_winstreak_mode_sumo_duel");
+                        break;
+                    case OP:
+                        s[0] = getValueAsInt(d, "op_duel_wins");
+                        s[1] = getValueAsInt(d, "op_duel_losses");
+                        s[2] = getValueAsInt(d, "current_winstreak_mode_op_duel");
                 }
             }
             return s;
@@ -1148,7 +1148,7 @@ public class Utils {
         }
 
         public static void drawBoxAroundEntity(Entity e, int type, double expand, double shift, int color,
-                boolean damage) {
+                                               boolean damage) {
             if (e instanceof EntityLivingBase) {
                 double x = (e.lastTickPosX + ((e.posX - e.lastTickPosX) * (double) Client.getTimer().renderPartialTicks))
                         - mc.getRenderManager().viewerPosX;
@@ -1194,7 +1194,7 @@ public class Utils {
                         int b = (int) (74.0D * r);
                         int hc = r < 0.3D ? Color.red.getRGB()
                                 : (r < 0.5D ? Color.orange.getRGB()
-                                        : (r < 0.7D ? Color.yellow.getRGB() : Color.green.getRGB()));
+                                : (r < 0.7D ? Color.yellow.getRGB() : Color.green.getRGB()));
                         GL11.glTranslated(x, y - 0.2D, z);
                         GL11.glRotated(-mc.getRenderManager().playerViewY, 0.0D, 1.0D, 0.0D);
                         GlStateManager.disableDepth();
@@ -1408,7 +1408,7 @@ public class Utils {
         }
 
         public static void drawColouredText(String text, char lineSplit, int leftOffset, int topOffset,
-                long colourParam1, long shift, boolean rect, FontRenderer fontRenderer) {
+                                            long colourParam1, long shift, boolean rect, FontRenderer fontRenderer) {
             int bX = leftOffset;
             int l = 0;
             long colourControl = 0L;
@@ -1471,7 +1471,7 @@ public class Utils {
             for (int i = 0; i < sides; ++i) {
                 double angle = ((6.283185307179586D * (double) i) / (double) sides) + Math.toRadians(180.0D);
                 worldrenderer.pos(x + (Math.sin(angle) * (double) radius), y + (Math.cos(angle) * (double) radius), 0.0D)
-                .endVertex();
+                        .endVertex();
             }
 
             tessellator.draw();
@@ -1480,7 +1480,7 @@ public class Utils {
         }
 
         public static void d3p(double x, double y, double z, double radius, int sides, float lineWidth, int color,
-                boolean chroma) {
+                               boolean chroma) {
             float a = (float) ((color >> 24) & 255) / 255.0F;
             float r = (float) ((color >> 16) & 255) / 255.0F;
             float g = (float) ((color >> 8) & 255) / 255.0F;
