@@ -352,7 +352,7 @@ public class Utils {
             float pitch = (float) (-((Math.atan2(diffY, dist) * 180.0D) / 3.141592653589793D));
             float correctYaw = mc.thePlayer.rotationYaw + MathHelper.wrapAngleTo180_float(yaw - mc.thePlayer.rotationYaw);
             float correctPitch = mc.thePlayer.rotationPitch + MathHelper.wrapAngleTo180_float(pitch - mc.thePlayer.rotationPitch);
-            correctYaw += getRandom(-2, 2);
+            correctYaw += getRandom(-1, 1);
             correctPitch = MathHelper.clamp_float(correctPitch, -90, 90);
             correctPitch += getRandom(-1,1);
             return new float[]{correctYaw, correctPitch};
