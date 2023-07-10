@@ -4,19 +4,9 @@ import com.google.common.eventbus.Subscribe;
 import keystrokesmod.client.event.impl.PacketEvent;
 import keystrokesmod.client.module.Module;
 import keystrokesmod.client.module.setting.impl.ComboSetting;
-import keystrokesmod.client.module.setting.impl.DescriptionSetting;
-import keystrokesmod.client.module.setting.impl.DoubleSliderSetting;
-import keystrokesmod.client.utils.Utils;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.*;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.Mod;
-
-import java.util.LinkedList;
-
-import static keystrokesmod.client.module.modules.other.Disabler.Mode.Vulcan;
 
 public class Disabler extends Module {
     public static ComboSetting mode;

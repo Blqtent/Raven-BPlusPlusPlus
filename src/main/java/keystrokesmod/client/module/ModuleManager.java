@@ -10,7 +10,7 @@ import keystrokesmod.client.module.modules.HUD;
 import keystrokesmod.client.module.modules.client.GuiModule;
 import keystrokesmod.client.module.modules.combat.*;
 import keystrokesmod.client.module.modules.config.ConfigSettings;
-import keystrokesmod.client.module.modules.hotkey.Blocks;
+import keystrokesmod.client.module.modules.minigames.SumoFences;
 import keystrokesmod.client.module.modules.movement.*;
 import keystrokesmod.client.module.modules.other.*;
 import keystrokesmod.client.module.modules.player.*;
@@ -62,7 +62,6 @@ public class ModuleManager {
         addModule(new ClientSpoof());
         addModule(new Nametags());
         addModule(new PlayerESP());
-        addModule(new Tracers());
         addModule(new HUD());
         addModule(new NoHurtCam());
         addModule(new SlyPort());
@@ -71,17 +70,16 @@ public class ModuleManager {
         addModule(new Terminal());
         addModule(new GuiModule());
         addModule(new SelfDestruct());
+        addModule(new AntiShuffle());
         addModule(new BridgeAssist());
         addModule(new Fullbright());
         addModule(new UpdateCheck());
         addModule(new No003s());
         addModule(new AutoTool());
-        addModule(new Blocks());
+        addModule(new Blink());
         addModule(new WTap());
         addModule(new BHop());
         addModule(new InstantStop());
-        addModule(new BlockHit());
-        addModule(new AutoWeapon());
         addModule(new MiddleClick());
         addModule(new Projectiles());
         addModule(new FakeHud());
@@ -89,7 +87,8 @@ public class ModuleManager {
         addModule(new JumpReset());
         addModule(new KillAura());
         addModule(new Targets());
-
+        addModule(new SumoFences());
+        addModule(new Spin());
         // why ?
         // idk dude. you tell me why. I am pretty sure this was blowsy's work.
         initialized = true;

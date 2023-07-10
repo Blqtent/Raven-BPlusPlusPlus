@@ -60,14 +60,6 @@ public class Scaffold extends Module {
 
     private void updateBlockCount() {
         blockCount = 3;
-        /*
-        for (int i = 0; i < InventoryUtils.END; i++) {
-            final ItemStack stack = InventoryUtils.getStackInSlot(i);
-
-            if (stack != null && stack.getItem() instanceof ItemBlock &&
-                    InventoryUtils.isGoodBlockStack(stack))
-                blockCount += stack.stackSize;
-        }*/
 
     }
 

@@ -1,36 +1,52 @@
 package keystrokesmod.client.module.modules.player;
 
-import java.util.ArrayList;
-
 import com.google.common.eventbus.Subscribe;
-
 import keystrokesmod.client.event.impl.PacketEvent;
 import keystrokesmod.client.module.Module;
+import keystrokesmod.client.utils.Utils;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.*;
+
+import java.util.LinkedList;
 
 public class Blink extends Module {
+    public static
 
-    private ArrayList<Packet> packets = new ArrayList<>();
-    
+    LinkedList<Packet<?>> beforeblink = new LinkedList<>();
+    boolean mmc;
+
     public Blink() {
-        super("Blink", ModuleCategory.player);
+        super("Blink", ModuleCategory.other);
     }
-    
-    @Subscribe
-    public void packetEvent(PacketEvent p) {
-        packets.add(p.getPacket());
-    }
-    
+
     @Override
     public void onEnable() {
-        packets.clear();
+        beforeblink.clear();
     }
-    
-    @Override
-    public void onDisable() {
-        for(Packet packet : packets) {
-            mc.getNetHandler().addToSendQueue(packet);
+
+    @Subscribe
+    public void onPacket(PacketEvent e) {
+        if (e.isOutgoing()) {
+            if (e.getPacket() instanceof C08PacketPlayerBlockPlacement) {
+                beforeblink.add(e.getPacket());
+                e.setCancelled(true);
+            }
+            if (e.getPacket() instanceof C03PacketPlayer) {
+                beforeblink.add(e.getPacket());
+                e.setCancelled(true);
+            }
+            if (e.getPacket() instanceof C02PacketUseEntity) {
+                beforeblink.add(e.getPacket());
+                e.setCancelled(true);
+            }
+            if (e.getPacket() instanceof C0APacketAnimation) {
+                beforeblink.add(e.getPacket());
+                e.setCancelled(true);
+            }
         }
-        packets.clear();
+    }
+    public void onDisable()
+    {
+            mc.thePlayer.sendQueue.addToSendQueue(beforeblink.poll());
     }
 }

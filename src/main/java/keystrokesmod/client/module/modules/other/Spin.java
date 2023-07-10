@@ -18,8 +18,8 @@ public class Spin extends Module {
     public Spin() {
         super("Spin", ModuleCategory.other);
         this.registerSetting(mode = new ComboSetting("Mode", aimMode.SMOOTH));
-        this.registerSetting(fov = new SliderSetting("fov", 30, -360, 360, 1));
-        this.registerSetting(time = new SliderSetting("time (ms)", 200, 0, 1000, 1));
+        this.registerSetting(fov = new SliderSetting("Fov", 30, -360, 360, 1));
+        this.registerSetting(time = new SliderSetting("Time", 200, 0, 1000, 1));
     }
 
     @Override

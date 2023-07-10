@@ -56,7 +56,7 @@ public class KillAura extends Module {
     /**
      * @Author Cosmic-SC
      * @Since 10/6/2023
-     * @CodeQuality SHIT.
+     * @CodeQuality GOOD.
      */
     public KillAura() {
         super("KillAura", ModuleCategory.combat);

@@ -16,33 +16,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 
 public class TargetHUD extends Module {
-    public TickSetting editPosition;
-    public int height, width;
-    public FontRenderer fr;
-    private AbstractClientPlayer target;
-    ScaledResolution sr;
-
     public TargetHUD() {
         super("Target HUD", ModuleCategory.render);
-        sr = new ScaledResolution(Minecraft.getMinecraft());
-        height = sr.getScaledHeight();
-        width = sr.getScaledWidth();
-        fr = mc.fontRendererObj;
     }
 
     @Subscribe
     public void onForgeEvent(ForgeEvent fe) {
-        if (fe.getEvent() instanceof AttackEntityEvent) {
-            AttackEntityEvent e = (AttackEntityEvent) fe.getEvent();
-            System.out.println(e.target instanceof AbstractClientPlayer);
-            System.out.println(e.target);
-            EntityPlayer ep = (EntityPlayer) e.target;
-        }
     }
 
     @Subscribe
     public void onRender2D(Render2DEvent e) {
-        ScaledResolution sr = new ScaledResolution(mc);
-        FontUtil.normal.drawCenteredSmoothString("EntityPlayer", (int) (sr.getScaledHeight()/2f-4), 0xff0000, 17266666);
     }
-    }
+}
