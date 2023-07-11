@@ -13,8 +13,6 @@ public class Blink extends Module {
     public static
 
     LinkedList<Packet<?>> beforeblink = new LinkedList<>();
-    boolean mmc;
-
     public Blink() {
         super("Blink", ModuleCategory.other);
     }
