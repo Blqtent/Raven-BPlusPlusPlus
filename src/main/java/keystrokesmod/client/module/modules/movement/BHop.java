@@ -63,7 +63,7 @@ public class BHop extends Module {
             case Vulcan: {
                 if (mc.thePlayer.onGround) {
                     mc.thePlayer.jump();
-                    MoveUtil.strafe(0.50);
+                    MoveUtil.strafe(0.44);
                 }
             }
             break;
