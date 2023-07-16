@@ -1,4 +1,4 @@
-package keystrokesmod.client.module.modules.player;
+package keystrokesmod.client.module.modules.world;
 
 import com.google.common.eventbus.Subscribe;
 import keystrokesmod.client.event.impl.PacketEvent;
@@ -14,7 +14,7 @@ public class Blink extends Module {
 
     LinkedList<Packet<?>> beforeblink = new LinkedList<>();
     public Blink() {
-        super("Blink", ModuleCategory.other);
+        super("Blink", ModuleCategory.world);
     }
 
     @Override
@@ -25,19 +25,16 @@ public class Blink extends Module {
     @Subscribe
     public void onPacket(PacketEvent e) {
         if (e.isOutgoing()) {
-            if (e.getPacket() instanceof C08PacketPlayerBlockPlacement) {
-                beforeblink.add(e.getPacket());
+            if (e.getPacket() instanceof C03PacketPlayer) { //movement shit
                 e.setCancelled(true);
             }
-            if (e.getPacket() instanceof C03PacketPlayer) {
-                beforeblink.add(e.getPacket());
-                e.setCancelled(true);
-            }
-            if (e.getPacket() instanceof C02PacketUseEntity) {
-                beforeblink.add(e.getPacket());
-                e.setCancelled(true);
-            }
-            if (e.getPacket() instanceof C0APacketAnimation) {
+            if (e.getPacket() instanceof C03PacketPlayer.C04PacketPlayerPosition
+                    || e.getPacket() instanceof C03PacketPlayer.C06PacketPlayerPosLook
+                    || e.getPacket() instanceof C08PacketPlayerBlockPlacement
+                    || e.getPacket() instanceof C0APacketAnimation
+                    || e.getPacket() instanceof C08PacketPlayerBlockPlacement
+                    || e.getPacket() instanceof C02PacketUseEntity
+                    || e.getPacket() instanceof C0FPacketConfirmTransaction) {
                 beforeblink.add(e.getPacket());
                 e.setCancelled(true);
             }
@@ -45,6 +42,7 @@ public class Blink extends Module {
     }
     public void onDisable()
     {
+        while(!beforeblink.isEmpty())
             mc.thePlayer.sendQueue.addToSendQueue(beforeblink.poll());
     }
 }

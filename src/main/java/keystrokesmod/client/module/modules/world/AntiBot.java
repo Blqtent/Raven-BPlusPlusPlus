@@ -1,132 +1,138 @@
 package keystrokesmod.client.module.modules.world;
 
+import java.util.HashMap;
+
 import com.google.common.eventbus.Subscribe;
-import keystrokesmod.client.event.impl.UpdateEvent;
+
+import keystrokesmod.client.event.impl.ForgeEvent;
+import keystrokesmod.client.event.impl.TickEvent;
 import keystrokesmod.client.main.Raven;
 import keystrokesmod.client.module.Module;
-import keystrokesmod.client.module.setting.Setting;
-import keystrokesmod.client.module.setting.impl.ComboSetting;
+import keystrokesmod.client.module.modules.player.Freecam;
 import keystrokesmod.client.module.setting.impl.TickSetting;
+import keystrokesmod.client.utils.Utils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import static keystrokesmod.client.utils.Utils.Player.isPlayerInGame;
-import java.util.ArrayList;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 
-//Taken straight from Quantum coz i don't wanna code the same thing twice and also im lazy
-// By Cosmic-SC
 public class AntiBot extends Module {
-    private static final ComboSetting<MODES> mode = new ComboSetting<>("Mode", MODES.ChecksOnly);
-    private final TickSetting remove = new TickSetting("Remove Bots", false);
-    private static final TickSetting tab = new TickSetting("TabList Check", false);
-    private static final TickSetting name = new TickSetting("Invalid Check", false);
-    private static final TickSetting sound = new TickSetting("Sound Check",true);
-    public static ArrayList<Entity> bots = new ArrayList<>();
+    private static final HashMap<EntityPlayer, Long> newEnt = new HashMap<>();
+    private final long ms = 4000L;
+    public static TickSetting a, dead;
 
     public AntiBot() {
         super("AntiBot", ModuleCategory.world);
-        this.registerSetting(tab);
-        this.registerSetting(name);
-        this.registerSetting(sound);
-        this.registerSetting(remove);
-        this.registerSetting(mode);
-    }
-
-    @Subscribe
-    public void onUpdate(UpdateEvent event) {
-        if (!isPlayerInGame()) return;
-        try {
-            switch (mode.getMode()) {
-                case Hypixel:
-                    for (Entity entity : mc.theWorld.loadedEntityList) {
-                        if (entity instanceof EntityPlayer) {
-                            if (entity != mc.thePlayer && !((EntityPlayer) entity).isSpectator()) {
-                                if (bot((EntityPlayer) entity)) {
-                                    if (remove.isToggled()) {
-                                        mc.theWorld.removeEntity(entity);
-                                    }
-                                    bots.add(entity);
-                                }
-                            } else {
-                                bots.remove(entity);
-                            }
-                        }
-                    }
-                    break;
-                case Advanced:
-                    mc.theWorld.playerEntities.forEach(player -> {
-                        if (player != mc.thePlayer) {
-                            if (mc.thePlayer.getDistanceSq(player.posX, mc.thePlayer.posY, player.posZ) > 200) {
-                                bots.remove(player);
-                            }
-
-                            if (player.ticksExisted < 5 || player.isInvisible() || mc.thePlayer.getDistanceSq(player.posX, mc.thePlayer.posY, player.posZ) > 100 * 100) {
-                                if (!bots.contains(player)) {
-                                    if (remove.isToggled()) {
-                                        mc.theWorld.removeEntity(player);
-                                    }
-                                    bots.add(player);
-                                }
-                            }
-                        }
-                    });
-                    break;
-                case ChecksOnly:
-                    for (final Entity entity : mc.theWorld.loadedEntityList) {
-                        if (entity instanceof EntityPlayer && entity != mc.thePlayer) {
-                            if ((dupelicateInTab((EntityPlayer) entity) && tab.isToggled()) || (invalidName(entity) && name.isToggled())) {
-                                if (sound.isToggled() && entity.doesEntityNotTriggerPressurePlate()) {
-                                    if (remove.isToggled()) {
-                                        mc.theWorld.removeEntity(entity);
-                                    }
-                                }
-                            }
-                        }
-                    }
-            }
-        } catch (Exception e) {
-
-        }
-    }
-
-
-    public void guiButtonToggled(Setting s){
-        if (s == mode){
-            bots.clear();
-        }
-    }
-
-    public static boolean bot(EntityPlayer entity) {
-        try {
-            if (Raven.moduleManager.getModuleByClazz(AntiBot.class).isEnabled()) {
-                if (mode.getMode() == MODES.ChecksOnly) {
-                    return (dupelicateInTab(entity) && tab.isToggled()) || (invalidName(entity) && name.isToggled());
-                } else {
-                    return bots.contains(entity);
-                }
-            } else {
-                return false;
-            }
-        } catch(Exception e){return false;}
+        withEnabled(true);
+        this.registerSetting(a = new TickSetting("Wait 80 ticks", false));
+        this.registerSetting(dead = new TickSetting("Remove dead", true));
     }
 
     @Override
     public void onDisable() {
-        if (!isPlayerInGame()) return;
-        bots.clear();
+        newEnt.clear();
     }
 
-    public enum MODES {
-        Hypixel,
-        Advanced,
-        ChecksOnly
+    @Subscribe
+    public void onEntityJoinWorld(ForgeEvent fe) {
+        if (fe.getEvent() instanceof EntityJoinWorldEvent) {
+            EntityJoinWorldEvent event = ((EntityJoinWorldEvent) fe.getEvent());
+
+            if (!Utils.Player.isPlayerInGame())
+                return;
+
+            if (a.isToggled() && event.entity instanceof EntityPlayer && event.entity != mc.thePlayer) {
+                newEnt.put((EntityPlayer) event.entity, System.currentTimeMillis());
+            }
+        }
     }
 
-
-    static boolean dupelicateInTab(final EntityPlayer entity) {
-        return mc.getNetHandler().getPlayerInfoMap().stream().filter((player) -> player != null && entity != null && player.getDisplayName() != null && entity.getDisplayName() != null && player.getDisplayName().getUnformattedText().equals(entity.getDisplayName().getUnformattedText())).count() > 0;
+    @Subscribe
+    public void onTick(TickEvent ev) {
+        if (a.isToggled() && !newEnt.isEmpty()) {
+            long now = System.currentTimeMillis();
+            newEnt.values().removeIf(e -> e < now - 4000L);
+        }
     }
 
-    static boolean invalidName(final Entity e) {
-        return e.getName().contains("-") || e.getName().contains("/") || e.getName().contains("_") || e.getName().contains("NPC-") || e.getName().contains("|") || e.getName().contains("<") || e.getName().contains(">") || e.getName().contains("\u0e22\u0e07") || e.getName().equals("");
+    public static boolean bot(Entity en) {
+        if (!Utils.Player.isPlayerInGame() || mc.currentScreen != null)
+            return false;
+        if (Freecam.en != null && Freecam.en == en) {
+            return true;
+        }
+        Module antiBot = Raven.moduleManager.getModuleByClazz(AntiBot.class);
+        if ((antiBot != null && !antiBot.isEnabled()) || !Utils.Client.isHyp()) {
+        } else if ((a.isToggled() && !newEnt.isEmpty() && newEnt.containsKey(en)) || en.getName().startsWith("§c")) {
+            return true;
+        } else if(en.isDead && dead.isToggled()) {
+            return true;
+        } else {
+            String n = en.getDisplayName().getUnformattedText();
+            if (n.contains("§")) {
+                return n.contains("[NPC] ");
+            }
+            if (n.isEmpty() && en.getName().isEmpty()) {
+                return true;
+            }
+
+            // illegal name checks
+            if(n.startsWith("CIT-")) return true;
+            if(n.equals("Empty")) return true;
+            if(n.contains(" ")) return true;
+            if(n.contains("<"))return true;
+            if(n.contains(">"))return true;
+            if(n.contains("#"))return true;
+            if(n.contains("+"))return true;
+            if(n.contains("&"))return true;
+            if(n.contains("/"))return true;
+            if(n.contains("("))return true;
+            if(n.contains(")"))return true;
+            if(n.contains("}"))return true;
+            if(n.contains("@"))return true;
+            if(n.contains("%"))return true;
+            if(n.contains(";"))return true;
+            if(n.contains("\n"))return true;
+            if(n.contains("^"))return true;
+            if(n.contains("{"))return true;
+            if(n.contains("'"))return true;
+            if(n.contains("*"))return true;
+            if(n.contains("~"))return true;
+            if(n.contains("$"))return true;
+            if(n.contains("["))return true;
+            if(n.contains("]"))return true;
+            if(n.contains(":")) return true;
+            if(n.contains("-")) return true;
+            if(n.contains("!")) return true;
+            if(n.contains("?")) return true;
+            if(n.contains("=")) return true;
+            if(n.contains("§")) return true;
+            if(n.length() < 3) return true;
+            if(n.length() > 16) return true;
+
+            if (n.length() == 10) {
+                int num = 0;
+                int let = 0;
+                char[] var4 = n.toCharArray();
+
+                for (char c : var4) {
+                    if (Character.isLetter(c)) {
+                        if (Character.isUpperCase(c)) {
+                            return false;
+                        }
+
+                        ++let;
+                    } else {
+                        if (!Character.isDigit(c)) {
+                            return false;
+                        }
+
+                        ++num;
+                    }
+                }
+
+                return num >= 2 && let >= 2;
+            }
+        }
+        return false;
     }
 }

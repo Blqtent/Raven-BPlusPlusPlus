@@ -14,7 +14,6 @@ public class LegitSpeed extends Module {
 
     public LegitSpeed() {
         super("LegitSpeed", ModuleCategory.movement);
-
         this.registerSetting(speed = new TickSetting("Increase Speed", true));
         this.registerSetting(speedInc = new SliderSetting("Speed", 1.12, 1, 1.4, 0.01));
         this.registerSetting(fastFall = new TickSetting("Fast Fall", false));

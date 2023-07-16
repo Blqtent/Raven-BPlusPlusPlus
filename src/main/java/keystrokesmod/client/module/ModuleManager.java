@@ -1,5 +1,6 @@
 package keystrokesmod.client.module;
 
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -33,13 +34,16 @@ public class ModuleManager {
             return;
         this.guiModuleManager = new GuiModuleManager();
         addModule(new ChestStealer());
+        addModule(new CustomDisabler());
         addModule(new AutoArmour());
+        addModule(new Scaffold());
         addModule(new LeftClicker());
         addModule(new AimAssist());
         addModule(new ClickAssist());
         addModule(new DelayRemover());
         addModule(new HitBox());
         addModule(new Reach());
+        addModule(new RightClicker());
         addModule(new Velocity());
         addModule(new Disabler());
         addModule(new Fly());
@@ -89,8 +93,6 @@ public class ModuleManager {
         addModule(new Targets());
         addModule(new SumoFences());
         addModule(new Spin());
-        // why ?
-        // idk dude. you tell me why. I am pretty sure this was blowsy's work.
         initialized = true;
     }
 

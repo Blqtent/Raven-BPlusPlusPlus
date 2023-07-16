@@ -44,7 +44,6 @@ public class BHop extends Module {
                     if (mc.thePlayer.onGround) {
                         mc.thePlayer.jump();
                     }
-
                     mc.thePlayer.setSprinting(true);
                     double spd = 0.0025D * a.getInput();
                     double m = (float) (Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + spd);
@@ -61,7 +60,7 @@ public class BHop extends Module {
                 }
                 break;
             case Vulcan: {
-                if (mc.thePlayer.onGround) {
+                if (mc.thePlayer.onGround && isMoving()) {
                     mc.thePlayer.jump();
                     MoveUtil.strafe(0.44);
                 }
