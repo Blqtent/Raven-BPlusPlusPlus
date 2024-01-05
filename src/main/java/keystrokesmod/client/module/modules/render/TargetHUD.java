@@ -1,56 +1,26 @@
 package keystrokesmod.client.module.modules.render;
 
 import com.google.common.eventbus.Subscribe;
-
-import keystrokesmod.client.event.impl.ForgeEvent;
+import keystrokesmod.client.event.impl.PacketEvent;
 import keystrokesmod.client.event.impl.Render2DEvent;
 import keystrokesmod.client.module.Module;
-import keystrokesmod.client.module.setting.impl.TickSetting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.gui.FontRenderer;
+import keystrokesmod.client.module.modules.combat.KillAura;
+import keystrokesmod.client.utils.RenderUtils;
+import keystrokesmod.client.utils.font.FontUtil;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.Entity;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 
 public class TargetHUD extends Module {
-    public TickSetting editPosition;
-    public int height, width;
-    public FontRenderer fr;
-    private AbstractClientPlayer target;
-    ScaledResolution sr;
-
     public TargetHUD() {
         super("Target HUD", ModuleCategory.render);
-        sr = new ScaledResolution(Minecraft.getMinecraft());
-        height = sr.getScaledHeight();
-        width = sr.getScaledWidth();
-        fr = mc.fontRendererObj;
     }
-
+    Entity target = KillAura.getTraget();
     @Subscribe
-    public void onForgeEvent(ForgeEvent fe) {
-        if (fe.getEvent() instanceof AttackEntityEvent) {
-            AttackEntityEvent e = (AttackEntityEvent) fe.getEvent();
-            System.out.println(e.target instanceof AbstractClientPlayer);
-            System.out.println(e.target);
-            EntityPlayer ep = (EntityPlayer) e.target;
-            
-            //e.target = AbstractClientPlayer.getLocationSkin();
+    public void onEnable(PacketEvent pe) {
+        if (pe.getPacket() instanceof AttackEntityEvent) {
+            ScaledResolution sr = new ScaledResolution(mc);
+            FontUtil.normal.drawCenteredSmoothString(target.getName(), (int) (sr.getScaledWidth()/2f+8), (int) (sr.getScaledHeight()/2f-4), 0x99808080);
         }
-    }
-
-    @Subscribe
-    public void onRender2d(Render2DEvent e) {
-        /*try {
-            ResourceLocation skin = AbstractClientPlayer.getLocationSkin();
-            Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
-            GL11.glEnable(GL11.GL_BLEND);
-            Gui.drawScaledCustomSizeModalRect(0, 0, 50, 50, 50, 50, 50, 50, 50, 50);
-            GL11.glDisable(GL11.GL_BLEND);
-        } catch (Exception e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } */
     }
 }

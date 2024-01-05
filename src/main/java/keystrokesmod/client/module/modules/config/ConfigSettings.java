@@ -2,6 +2,7 @@ package keystrokesmod.client.module.modules.config;
 
 import keystrokesmod.client.main.Raven;
 import keystrokesmod.client.module.Module;
+import keystrokesmod.client.module.setting.Setting;
 import keystrokesmod.client.module.setting.impl.TickSetting;
 
 public class ConfigSettings extends Module {
@@ -18,8 +19,11 @@ public class ConfigSettings extends Module {
         return false;
     }
 
-    public void guiButtonToggled(TickSetting b) {
-        b.setEnabled(false);
-        Raven.configManager.discoverConfigs();
+    public void guiButtonToggled(Setting s) {
+        if (s == updateConfig) {
+            TickSetting b = (TickSetting)s;
+            b.setEnabled(false);
+            Raven.configManager.discoverConfigs();
+        }
     }
 }

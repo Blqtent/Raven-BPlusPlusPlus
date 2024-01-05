@@ -1,105 +1,74 @@
 package keystrokesmod.client.module.modules.movement;
 
 import com.google.common.eventbus.Subscribe;
-
-import keystrokesmod.client.event.impl.Render2DEvent;
+import keystrokesmod.client.event.impl.UpdateEvent;
+import keystrokesmod.client.main.Raven;
 import keystrokesmod.client.module.Module;
+import keystrokesmod.client.module.setting.impl.ComboSetting;
 import keystrokesmod.client.module.setting.impl.SliderSetting;
-import keystrokesmod.client.utils.CoolDown;
+import keystrokesmod.client.utils.MoveUtil;
 import keystrokesmod.client.utils.Utils;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.Minecraft;
 
-public class VulcantBHop extends Module {
-    private Minecraft mc = Minecraft.getMinecraft();
+import static keystrokesmod.client.utils.MoveUtil.getSpeed;
+import static keystrokesmod.client.utils.MoveUtil.strafe;
+import static keystrokesmod.client.utils.Utils.Player.isMoving;
+
+public class BHop extends Module {
+    public static SliderSetting a;
     private boolean wasTimer = false;
-    public static SliderSetting sdf;
-    private static final String c1 = "Vulcant (Blqtent credit)";
-    public VulcantBHop() {
-        super("BHop (Credit goes to Blqtent for vulcan bypass)", ModuleCategory.movement);
-        this.registerSetting(sdf = new SliderSetting("Mode", 1.0D, 1.0D, 1.0D, 1.0D));
-        this.registerSetting(dc = new DescriptionSetting(Utils.md + c1));
+    private ComboSetting<mode> hopMode;
 
+    public BHop() {
+        super("BHop", ModuleCategory.movement);
+        this.registerSetting(a = new SliderSetting("Speed", 2.0D, 1.0D, 15.0D, 0.2D));
+        this.registerSetting(hopMode = new ComboSetting<>("Mode", mode.Legit));
     }
-    // Subscribe to https://www.youtube.com/channel/UCa1M9UnJX7IGJMbmAmLbDFQ for epic BHop
+    public void onDisable() {
+        mc.thePlayer.setSprinting(true);
+        mc.timer.timerSpeed = 1f;
+    }
+    public void guiUpdate() {
+        a.hideComponent(hopMode.getMode().equals(mode.Blatant));
+    }
+
     @Subscribe
-    public void onTick(TickEvent e) {
-        if (a.getInput() == 1.0D) {
-            vulcan()
-        }
-    }
-    
-    private void vulcan() {
-        if (wasTimer) {
-            mc.timer.timerSpeed = 1.00f;
-            wasTimer = false;
-        }
-        if (Math.abs(Module.mc.thePlayer.movementInput.moveStrafe) < 0.1f) {
-            mc.thePlayer.jumpMovementFactor = 0.026499f;
-        } else {
-            mc.thePlayer.jumpMovementFactor = 0.0244f;
-        }
-        mc.gameSettings.keyBindJump.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindJump);
+    public void onUpate(UpdateEvent e) {
+        switch (hopMode.getMode()) {
+            case Blatant:
+                Module fly = Raven.moduleManager.getModuleByClazz(Fly.class);
+                if (fly != null && !fly.isEnabled() && isMoving() && !mc.thePlayer.isInWater()) {
+                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindJump.getKeyCode(), false);
+                    mc.thePlayer.noClip = true;
+                    if (mc.thePlayer.onGround) {
+                        mc.thePlayer.jump();
+                    }
+                    mc.thePlayer.setSprinting(true);
+                    double spd = 0.0025D * a.getInput();
+                    double m = (float) (Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ) + spd);
+                    Utils.Player.bop(m);
+                }
+                break;
 
-        if (getSpeed() < 0.215f && !mc.thePlayer.onGround) {
-            strafe(0.215f);
+            case Legit:
+                mc.thePlayer.setSprinting(false);
+                if (isMoving()) {
+                    if (mc.thePlayer.onGround) {
+                        mc.thePlayer.jump();
+                     }
+                }
+                break;
+            case Vulcan: {
+                if (mc.thePlayer.onGround && isMoving()) {
+                    mc.thePlayer.jump();
+                    MoveUtil.strafe(0.44);
+                }
+            }
+            break;
         }
-        if (mc.thePlayer.onGround && isMoving()) {
-            mc.gameSettings.keyBindJump.pressed = false;
-            mc.thePlayer.jump();
-            if (!mc.thePlayer.isAirBorne) {
-                return;
-            }
-            mc.timer.timerSpeed = 1.25f;
-            wasTimer = true;
-            strafe();
-            if (getSpeed() < 0.5f) {
-                strafe(0.4849f);
-            }
-        } else if (!isMoving()) {
-            mc.timer.timerSpeed = 1.00f;
-        }        
     }
-    
-    public static float getPlayerDirection() {
-        // start with our current yaw
-        float yaw = mc.thePlayer.rotationYaw;
-        float strafe = 45;
-        // add 180 to the yaw to strafe backwards
-        if(mc.thePlayer.moveForward < 0){
-            // invert our strafe to -45
-            strafe = -45;
-            yaw += 180;
-        }
-        if (mc.thePlayer.moveStrafing > 0) {
-            // subtract 45 to strafe left forward
-            yaw -= strafe;
-            // subtract an additional 45 if we do not press W in order to get to -90
-            if (mc.thePlayer.moveForward == 0) {
-                yaw -= 45;
-            }
-        } else if (mc.thePlayer.moveStrafing < 0) {
-            // add 45 to strafe right forward
-            yaw += strafe;
-            // add 45 if we do not press W in order to get to 90
-            if (mc.thePlayer.moveForward == 0) {
-                yaw += 45;
-            }
-        }
-        return yaw;
+    public enum mode {
+        Blatant, Legit, Vulcan
     }
-    
-    public void strafe(final float speed) {
-        if (!isMoving()) return;
-
-        final double yaw = getDirection();
-
-        mc.thePlayer.motionX = -MathHelper.sin((float) yaw) * speed;
-        mc.thePlayer.motionZ = MathHelper.cos((float) yaw) * speed;
-    }
-    
-    public static boolean isMoving() {
-        return mc.thePlayer != null && (mc.thePlayer.movementInput.moveForward != 0F || mc.thePlayer.movementInput.moveStrafe != 0F);
-    }
-    
 }

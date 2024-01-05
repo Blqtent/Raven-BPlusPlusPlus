@@ -5,6 +5,7 @@ import keystrokesmod.client.event.impl.TickEvent;
 import keystrokesmod.client.module.Module;
 import keystrokesmod.client.module.setting.impl.DescriptionSetting;
 import keystrokesmod.client.module.setting.impl.SliderSetting;
+import keystrokesmod.client.utils.MoveUtil;
 import keystrokesmod.client.utils.Utils;
 import net.minecraft.client.Minecraft;
 
@@ -15,13 +16,13 @@ public class Fly extends Module {
     public static SliderSetting a;
     public static SliderSetting b;
     private static final String c1 = "Vanilla";
-    private static final String c2 = "Glide";
+    private static final String c2 = "Boost";
 
     public Fly() {
         super("Fly", ModuleCategory.movement);
         this.registerSetting(a = new SliderSetting("Value", 1.0D, 1.0D, 2.0D, 1.0D));
         this.registerSetting(dc = new DescriptionSetting(Utils.md + c1));
-        this.registerSetting(b = new SliderSetting("Speed", 2.0D, 1.0D, 5.0D, 0.1D));
+        this.registerSetting(b = new SliderSetting("Speed", 2.0D, 1.0D, 20.0D, 0.1D));
     }
 
     public void onEnable() {
@@ -123,6 +124,7 @@ public class Fly extends Module {
             Module.mc.thePlayer.motionY = 0.0D;
             Module.mc.thePlayer.capabilities.setFlySpeed((float) (0.05000000074505806D * b.getInput()));
             Module.mc.thePlayer.capabilities.isFlying = true;
+            MoveUtil.strafe(0.25);
         }
     }
 }

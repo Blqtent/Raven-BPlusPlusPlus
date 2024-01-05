@@ -13,6 +13,7 @@ import keystrokesmod.client.event.impl.UpdateEvent;
 import keystrokesmod.client.main.Raven;
 import keystrokesmod.client.module.Module;
 import keystrokesmod.client.module.modules.movement.NoSlow;
+import keystrokesmod.client.module.modules.other.No003s;
 import keystrokesmod.client.module.modules.movement.Sprint;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -142,7 +143,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
             double d2 = e.getZ() - this.lastReportedPosZ;
             double d3 = e.getYaw() - this.lastReportedYaw;
             double d4 = e.getPitch() - this.lastReportedPitch;
-            boolean flag2 = (((d0 * d0) + (d1 * d1) + (d2 * d2)) > 9.0E-4D) || (this.positionUpdateTicks >= 20);
+            boolean flag2 = (((d0 * d0) + (d1 * d1) + (d2 * d2)) > (Raven.moduleManager.getModuleByClazz(No003s.class).isEnabled() ? 0.0 : 9.0E-4D)) || (this.positionUpdateTicks >= 20);
             boolean flag3 = (d3 != 0.0D) || (d4 != 0.0D);
             if (this.ridingEntity == null) {
                 if (flag2 && flag3)

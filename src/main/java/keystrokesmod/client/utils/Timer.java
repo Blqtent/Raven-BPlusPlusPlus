@@ -3,10 +3,18 @@ package keystrokesmod.client.utils;
 public class Timer {
     private final float updates;
     private long last;
+    public static long lastMS = System.currentTimeMillis();
     private float cached;
 
     public Timer(float updates) {
         this.updates = updates;
+    }
+
+    public static boolean hasTimeElapsed(long time) {
+        return System.currentTimeMillis() - lastMS > time;
+    }
+    public void setTime(long time) {
+        lastMS = time;
     }
 
     public float getValueFloat(float begin, float end, int type) {
@@ -45,6 +53,9 @@ public class Timer {
     public void start() {
         this.cached = 0.0F;
         this.last = System.currentTimeMillis();
+    }
+    public static void reset() {
+        lastMS = System.currentTimeMillis();
     }
 
     private float bounce(float t) {

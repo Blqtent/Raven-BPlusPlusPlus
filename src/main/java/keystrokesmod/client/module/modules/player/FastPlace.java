@@ -3,6 +3,7 @@ package keystrokesmod.client.module.modules.player;
 import com.google.common.eventbus.Subscribe;
 import keystrokesmod.client.event.impl.TickEvent;
 import keystrokesmod.client.module.Module;
+import keystrokesmod.client.module.setting.impl.DoubleSliderSetting;
 import keystrokesmod.client.module.setting.impl.SliderSetting;
 import keystrokesmod.client.module.setting.impl.TickSetting;
 import keystrokesmod.client.utils.Utils;
@@ -12,11 +13,12 @@ import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemSnowball;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import org.apache.commons.lang3.RandomUtils;
 
 import java.lang.reflect.Field;
 
 public class FastPlace extends Module {
-    public static SliderSetting delaySlider, projSlider;
+    public static DoubleSliderSetting delaySlider, projSlider;
     public static TickSetting blockOnly, projSeparate;
 
     public static final Field rightClickDelayTimerField;
@@ -33,10 +35,10 @@ public class FastPlace extends Module {
     public FastPlace() {
         super("FastPlace", ModuleCategory.player);
 
-        this.registerSetting(delaySlider = new SliderSetting("Delay", 0.0D, 0.0D, 4.0D, 1.0D));
+        this.registerSetting(delaySlider = new DoubleSliderSetting("Delay", 1.0D,2.0D, 1.0D, 4.0D, 1.0D));
         this.registerSetting(blockOnly = new TickSetting("Blocks only", true));
         this.registerSetting(projSeparate = new TickSetting("Separate Projectile Delay", true));
-        this.registerSetting(projSlider = new SliderSetting("Projectile Delay", 2.0D, 0.0D, 4.0D, 1.0D));
+        this.registerSetting(projSlider = new DoubleSliderSetting("Projectile Delay", 1.0D,2.0D, 1.0D, 4.0D, 1.0D));
 
     }
 
@@ -52,7 +54,7 @@ public class FastPlace extends Module {
                 ItemStack item = mc.thePlayer.getHeldItem();
                 if (item != null && (item.getItem() instanceof ItemBlock)) {
                     try {
-                        int c = (int) delaySlider.getInput();
+                        int c = (int) RandomUtils.nextInt((int) delaySlider.getInputMin(), (int) delaySlider.getInputMax());
                         if (c == 0) {
                             rightClickDelayTimerField.set(mc, 0);
                         } else {
@@ -70,7 +72,7 @@ public class FastPlace extends Module {
                 } else if (item != null && (item.getItem() instanceof ItemSnowball || item.getItem() instanceof ItemEgg)
                         && projSeparate.isToggled()) {
                     try {
-                        int c = (int) projSlider.getInput();
+                        int c = (int) RandomUtils.nextInt((int) projSlider.getInputMin(), (int) projSlider.getInputMax());
                         if (c == 0) {
                             rightClickDelayTimerField.set(mc, 0);
                         } else {
@@ -88,7 +90,7 @@ public class FastPlace extends Module {
                 }
             } else {
                 try {
-                    int c = (int) delaySlider.getInput();
+                    int c = (int) RandomUtils.nextInt((int) delaySlider.getInputMin(), (int) delaySlider.getInputMax());
                     if (c == 0) {
                         rightClickDelayTimerField.set(mc, 0);
                     } else {

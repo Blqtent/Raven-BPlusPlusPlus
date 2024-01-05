@@ -9,7 +9,7 @@ import keystrokesmod.client.event.impl.ForgeEvent;
 import keystrokesmod.client.main.Raven;
 import keystrokesmod.client.module.Module;
 import keystrokesmod.client.module.modules.combat.AimAssist;
-import keystrokesmod.client.module.modules.combat.aura.KillAura;
+import keystrokesmod.client.module.modules.combat.KillAura;
 import keystrokesmod.client.module.modules.world.AntiBot;
 import keystrokesmod.client.module.setting.Setting;
 import keystrokesmod.client.module.setting.impl.ComboSetting;
@@ -36,9 +36,10 @@ public class Targets extends Module {
                         teams = new TickSetting("Target teammates", false),
                         invis = new TickSetting("Target invis", false),
                         bots = new TickSetting("Target bots", false),
-                        naked = new TickSetting("Target naked", false),
+                        naked = new TickSetting("Target Un-Armoured", false),
                         fov = new SliderSetting("General Fov", 180, 0, 360, 1),
-                        auraFov = new SliderSetting("Aura Fov", 360, 0, 360, 1),                        distance = new SliderSetting("Distance", 3.5, 0, 10, 0.1),
+                        auraFov = new SliderSetting("Aura Fov", 360, 0, 360, 1),    
+                        distance = new SliderSetting("Distance", 3.5, 0, 10, 0.1),
                         sortMode = new ComboSetting("Sort mode", SortMode.Distance),
                         lockDist = new SliderSetting("Lock distance", 4, 0, 10, 0.1),
                         debug = new TickSetting("debug", false)

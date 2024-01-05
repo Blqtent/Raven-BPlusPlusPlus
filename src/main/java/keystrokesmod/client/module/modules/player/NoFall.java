@@ -30,31 +30,6 @@ public class NoFall extends Module {
             }
             break;
 
-        case HypixelSpoof:
-            if (mc.thePlayer.onGround) {
-                ticks = 0;
-                dist = 0;
-                spoofing = false;
-            } else {
-                if (mc.thePlayer.fallDistance > 2) {
-                    if (spoofing) {
-                        ticks++;
-                        mc.thePlayer.onGround = true;
-
-                        if (ticks >= 2) {
-                            spoofing = false;
-                            ticks = 0;
-                            dist = mc.thePlayer.fallDistance;
-                        }
-                    } else {
-                        if (mc.thePlayer.fallDistance - dist > 2) {
-                            spoofing = true;
-                        }
-                    }
-                }
-            }
-            break;
-
         case Verus:
             if (mc.thePlayer.onGround) {
                 dist = 0;
@@ -78,6 +53,6 @@ public class NoFall extends Module {
     }
 
     public enum Mode {
-        Spoof, HypixelSpoof, Verus
+        Spoof, Verus
     }
 }

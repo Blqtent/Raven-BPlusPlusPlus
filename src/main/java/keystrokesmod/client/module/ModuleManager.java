@@ -1,5 +1,6 @@
 package keystrokesmod.client.module;
 
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -9,9 +10,8 @@ import keystrokesmod.client.module.Module.ModuleCategory;
 import keystrokesmod.client.module.modules.HUD;
 import keystrokesmod.client.module.modules.client.GuiModule;
 import keystrokesmod.client.module.modules.combat.*;
-import keystrokesmod.client.module.modules.combat.aura.KillAura;
 import keystrokesmod.client.module.modules.config.ConfigSettings;
-import keystrokesmod.client.module.modules.hotkey.Blocks;
+import keystrokesmod.client.module.modules.minigames.SumoFences;
 import keystrokesmod.client.module.modules.movement.*;
 import keystrokesmod.client.module.modules.other.*;
 import keystrokesmod.client.module.modules.player.*;
@@ -19,6 +19,7 @@ import keystrokesmod.client.module.modules.render.*;
 import keystrokesmod.client.module.modules.world.*;
 import keystrokesmod.client.module.modules.client.*;
 import keystrokesmod.client.utils.Utils;
+import keystrokesmod.client.utils.font.FontUtil;
 import net.minecraft.client.gui.FontRenderer;
 
 public class ModuleManager {
@@ -33,14 +34,18 @@ public class ModuleManager {
             return;
         this.guiModuleManager = new GuiModuleManager();
         addModule(new ChestStealer());
+        addModule(new CustomDisabler());
         addModule(new AutoArmour());
+        addModule(new Scaffold());
         addModule(new LeftClicker());
         addModule(new AimAssist());
         addModule(new ClickAssist());
         addModule(new DelayRemover());
         addModule(new HitBox());
         addModule(new Reach());
+        addModule(new RightClicker());
         addModule(new Velocity());
+        addModule(new Disabler());
         addModule(new Fly());
         addModule(new InvMove());
         addModule(new KeepSprint());
@@ -49,7 +54,6 @@ public class ModuleManager {
         addModule(new LegitSpeed());
         addModule(new Timer());
         addModule(new VClip());
-        addModule(new AutoJump());
         addModule(new AutoPlace());
         addModule(new BedAura());
         addModule(new FastPlace());
@@ -59,44 +63,36 @@ public class ModuleManager {
         addModule(new AntiBot());
         addModule(new Chams());
         addModule(new ChestESP());
+        addModule(new ClientSpoof());
         addModule(new Nametags());
         addModule(new PlayerESP());
-        addModule(new Tracers());
         addModule(new HUD());
+        addModule(new NoHurtCam());
         addModule(new SlyPort());
         addModule(new FakeChat());
         addModule(new WaterBucket());
-        // addModule(new AutoConfig());
         addModule(new Terminal());
         addModule(new GuiModule());
         addModule(new SelfDestruct());
+        addModule(new AntiShuffle());
         addModule(new BridgeAssist());
         addModule(new Fullbright());
         addModule(new UpdateCheck());
-        addModule(new AutoHeader());
+        addModule(new No003s());
         addModule(new AutoTool());
-        addModule(new Blocks());
+        addModule(new Blink());
         addModule(new WTap());
+        addModule(new BHop());
         addModule(new InstantStop());
-        addModule(new BlockHit());
-        addModule(new AutoWeapon());
-        
-        addModule(new AutoBlock());
         addModule(new MiddleClick());
         addModule(new Projectiles());
         addModule(new FakeHud());
         addModule(new ConfigSettings());
         addModule(new JumpReset());
         addModule(new KillAura());
-        //addModule(new Radar());
         addModule(new Targets());
-        //addModule(new CursorTrail());
-	addModule(new VulcantBHop());
-        //addModule(new SpeedTest());
-        //addModule(new LegitAura());
-        //addModule(new TargetHUD());
-        // why ?
-        // idk dude. you tell me why. I am pretty sure this was blowsy's work.
+        addModule(new SumoFences());
+        addModule(new Spin());
         initialized = true;
     }
 
@@ -175,8 +171,11 @@ public class ModuleManager {
     }
 
     public void sort() {
-        modules.sort((o1, o2) -> Utils.mc.fontRendererObj.getStringWidth(o2.getName())
-                - Utils.mc.fontRendererObj.getStringWidth(o1.getName()));
+        if (HUD.customFont.isToggled()) {
+            modules.sort((o1, o2) -> (int) (FontUtil.two.getStringWidth(o2.getName()) - FontUtil.two.getStringWidth(o1.getName())));
+        } else {
+            modules.sort((o1, o2) -> Utils.mc.fontRendererObj.getStringWidth(o2.getName()) - Utils.mc.fontRendererObj.getStringWidth(o1.getName()));
+        }
     }
 
     public int numberOfModules() {
@@ -184,12 +183,19 @@ public class ModuleManager {
     }
 
     public void sortLongShort() {
-        modules.sort(Comparator.comparingInt(o2 -> Utils.mc.fontRendererObj.getStringWidth(o2.getName())));
+        if (HUD.customFont.isToggled()) {
+            modules.sort(Comparator.comparingInt(o2 -> (int) FontUtil.two.getStringWidth(o2.getName())));
+        } else {
+            modules.sort(Comparator.comparingInt(o2 -> Utils.mc.fontRendererObj.getStringWidth(o2.getName())));
+        }
     }
 
     public void sortShortLong() {
-        modules.sort((o1, o2) -> Utils.mc.fontRendererObj.getStringWidth(o2.getName())
-                - Utils.mc.fontRendererObj.getStringWidth(o1.getName()));
+        if (HUD.customFont.isToggled()) {
+            modules.sort((o1, o2) -> (int) (FontUtil.two.getStringWidth(o2.getName()) - FontUtil.two.getStringWidth(o1.getName())));
+        } else {
+            modules.sort((o1, o2) -> Utils.mc.fontRendererObj.getStringWidth(o2.getName()) - Utils.mc.fontRendererObj.getStringWidth(o1.getName()));
+        }
     }
 
     public int getLongestActiveModule(FontRenderer fr) {
@@ -201,11 +207,27 @@ public class ModuleManager {
         return length;
     }
 
+    public int getLongestActiveModuleCustom() {
+        int length = 0;
+        for (Module mod : modules)
+            if (mod.isEnabled())
+                if (FontUtil.two.getStringWidth(mod.getName()) > length)
+                    length = (int) FontUtil.two.getStringWidth(mod.getName());
+        return length;
+    }
+
     public int getBoxHeight(FontRenderer fr, int margin) {
         int length = 0;
         for (Module mod : modules)
 			if (mod.isEnabled())
 				length += fr.FONT_HEIGHT + margin;
+        return length;
+    }
+    public int getBoxHeightCustom(int margin) {
+        int length = 0;
+        for (Module mod : modules)
+            if (mod.isEnabled())
+                length += FontUtil.two.getHeight() + margin;
         return length;
     }
 

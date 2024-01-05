@@ -33,6 +33,7 @@ public class AutoArmour extends Module {
 
     @Subscribe
     public void onRender2D(Render2DEvent e) {
+        if (!Utils.Player.isPlayerInGame()) return;
         if (Utils.Player.isPlayerInInventory()) {
             if (!inInv) {
                 delayTimer.setCooldown((long) ThreadLocalRandom.current().nextDouble(firstDelay.getInputMin(),

@@ -2,6 +2,7 @@ package keystrokesmod.client.mixin.mixins;
 
 import java.util.List;
 
+import keystrokesmod.client.module.modules.other.NoHurtCam;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -12,7 +13,7 @@ import keystrokesmod.client.main.Raven;
 import keystrokesmod.client.module.Module;
 import keystrokesmod.client.module.modules.combat.HitBox;
 import keystrokesmod.client.module.modules.combat.Reach;
-import keystrokesmod.client.module.modules.combat.aura.KillAura;
+import keystrokesmod.client.module.modules.combat.KillAura;
 import keystrokesmod.client.module.modules.render.Fullbright;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -28,6 +29,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(priority = 995, value = EntityRenderer.class)
 public class MixinEntityRenderer {
@@ -254,6 +258,13 @@ public class MixinEntityRenderer {
                 this.mc.mcProfiler.endSection();
             }
         }
+    }
+    
+    //@author Cosmic
+    @Inject(method = "hurtCameraEffect", at = @At("HEAD"), cancellable = true)
+    public void hurtCameraEffect(CallbackInfo callbackInfo) {
+        if (Raven.moduleManager.getModuleByClazz(NoHurtCam.class).isEnabled())
+            callbackInfo.cancel();
     }
 
     /**

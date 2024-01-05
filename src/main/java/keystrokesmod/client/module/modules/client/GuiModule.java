@@ -5,18 +5,23 @@ import keystrokesmod.client.main.Raven;
 import keystrokesmod.client.module.Module;
 import keystrokesmod.client.module.setting.Setting;
 import keystrokesmod.client.module.setting.impl.ComboSetting;
+import keystrokesmod.client.module.setting.impl.RGBSetting;
+import keystrokesmod.client.module.setting.impl.SliderSetting;
 import keystrokesmod.client.module.setting.impl.TickSetting;
 import keystrokesmod.client.utils.ColorM;
 import keystrokesmod.client.utils.Utils;
+
+import java.awt.*;
 
 public class GuiModule extends Module {
 
     private static ComboSetting preset;
 
-    private static TickSetting cleanUp, reset, betagui, rainbowNotification, notifications;
+    private static TickSetting cleanUp, reset, betagui, rainbowNotification, notifications,customm,advanced;
 
     public static int guiScale;
-
+    private static RGBSetting borderRGBs,backgroundRGBs,eTopRGB,eBottomRGB,catTextRGB;
+    private static SliderSetting alpha;
     public GuiModule() {
         super("Gui", ModuleCategory.client);
         withKeycode(54);
@@ -25,10 +30,30 @@ public class GuiModule extends Module {
         this.registerSetting(cleanUp = new TickSetting("Clean Up", false));
         this.registerSetting(reset = new TickSetting("Reset position", false));
         this.registerSetting(notifications = new TickSetting("Notifications", false));
-        this.registerSetting(rainbowNotification = new TickSetting("Reset position", false));
+        this.registerSetting(rainbowNotification = new TickSetting("Rainbow Notifications", false));
         this.registerSetting(preset = new ComboSetting("Preset", Preset.PlusPlus));
+        this.registerSetting(customm = new TickSetting("Custom Font",true));
+        this.registerSettings(
+                alpha = new SliderSetting("Background Alpha",1,1,255,1),
+                catTextRGB = new RGBSetting("Category Text RGB",1,1,1),
+                borderRGBs = new RGBSetting("Border RGB",1,1,1),
+                backgroundRGBs = new RGBSetting("Background RGB",1,1,1),
+                advanced = new TickSetting("Advanced Enabled RGB",false),
+                eTopRGB = new RGBSetting("EnabledTopRGB",1,1,1),
+                eBottomRGB = new RGBSetting("EnabledBottomRGB",1,1,1)
+        );
     }
 
+    public void guiUpdate(){
+        catTextRGB.hideComponent(preset.getMode().equals(Preset.Custom));
+        advanced.hideComponent(preset.getMode().equals(Preset.Custom));
+        customm.hideComponent(preset.getMode().equals(Preset.Custom));
+        borderRGBs.hideComponent(preset.getMode().equals(Preset.Custom));
+        backgroundRGBs.hideComponent(preset.getMode().equals(Preset.Custom));
+        eTopRGB.hideComponent(preset.getMode().equals(Preset.Custom));
+        eBottomRGB.hideComponent(preset.getMode().equals(Preset.Custom) && advanced.isToggled());
+        alpha.hideComponent(preset.getMode().equals(Preset.Custom));
+    }
     @Override
     public void guiButtonToggled(Setting setting) {
         if (setting == cleanUp) {
@@ -80,7 +105,7 @@ public class GuiModule extends Module {
     }
 
     public static boolean useCustomFont() {
-        return  getPresetMode().useCustomFont;
+        return  preset.getMode().equals(Preset.Custom) ? customm.isToggled() : getPresetMode().useCustomFont;
     }
 
     public static int getEnabledTopRGB(int delay) {
@@ -211,46 +236,47 @@ public class GuiModule extends Module {
     public static boolean notifications() {
         return notifications.isToggled();
     }
-
     public enum Preset {
-        /* Vape(true, false, true, true, // showGradientEnabled - showGradientDisabled - useCustomFont -
-                // categoryBackground
-                CNColor.STATIC, // just leave this
-                // new Color(red, green, blue, alpha (optional out of 255 default is 255))
-                new Color(255, 255, 255), // categoryNameRGB
-                new Color(27, 25, 26, 255), // settingBackgroundRGB
-                new Color(27, 25, 26), // categoryBackgroundRGB
-                new Color(59, 132, 107), // enabledTopRGB
-                new Color(59, 132, 107), // enabledBottomRGB
-                new Color(250, 250, 250), // enabledTextRGB
-                new Color(27, 25, 26), // disabledTopRGB
-                new Color(27, 25, 26), // disabledBottomRGB
-                new Color(255, 255, 255), // disabledTextRGB
-                new Color(27, 25, 26), // backgroundRGBW
-                false, //rounded
-                false //swing
-                ), */
-        Vape( // name
+        Custom( // name
                         true, false, true, true, // showGradientEnabled - showGradientDisabled - useCustomFont -
                         CNColor.STATIC, // just leave this
-                        in -> 0xFFFFFFFE, // categoryNameRGB
-                        in -> 0x99808080, // settingBackgroundRGB
-                        in -> 0x99808080, // categoryBackgroundRGB
-                        in -> -12876693, // enabledTopRGB
-                        in -> -12876693, // enabledBottomRGB
+                        in -> catTextRGB.getRGB(), // categoryNameRGB
+                        in -> new Color(backgroundRGBs.getRed(),backgroundRGBs.getGreen(),backgroundRGBs.getBlue(), (int) alpha.getInput()).getRGB(), // settingBackgroundRGB
+                        in -> new Color(backgroundRGBs.getRed(),backgroundRGBs.getGreen(),backgroundRGBs.getBlue(), (int) alpha.getInput()).getRGB(), // categoryBackgroundRGB
+                        in -> eTopRGB.getRGB(), // enabledTopRGB
+                        in -> !advanced.isToggled() ? eTopRGB.getRGB() : eBottomRGB.getRGB(), // enabledBottomRGB
                         in -> 0xFFFFFFFE, // enabledTextRGB
                         in -> 0xFF000000, // disabledTopRGB
                         in -> 0xFF000000, // disabledBottomRGB
                         in -> 0xFFFFFFFE, // disabledTextRGB
-                        in -> 0x99808080, // backgroundRGB
+                        in -> new Color(backgroundRGBs.getRed(),backgroundRGBs.getGreen(),backgroundRGBs.getBlue(), (int) alpha.getInput()).getRGB(), // backgroundRGB
                         true, //rounded
                         true, //swing
-                        false, //boarder
-                        in -> -12876693,
-                        in -> -12876693,
-                        in -> Utils.Client.otherAstolfoColorsDraw(in, 10)
+                        true, //boarder
+                        in -> 0x99808080,
+                        in -> borderRGBs.getRGB(),
+                        in -> borderRGBs.getRGB()
                         ),
-
+        Vape( // name
+                true, false, true, true, // showGradientEnabled - showGradientDisabled - useCustomFont -
+                CNColor.STATIC, // just leave this
+                in -> 0xFFFFFFFE, // categoryNameRGB
+                in -> 0x99808080, // settingBackgroundRGB
+                in -> 0x99808080, // categoryBackgroundRGB
+                in -> -12876693, // enabledTopRGB
+                in -> -12876693, // enabledBottomRGB
+                in -> 0xFFFFFFFE, // enabledTextRGB
+                in -> 0xFF000000, // disabledTopRGB
+                in -> 0xFF000000, // disabledBottomRGB
+                in -> 0xFFFFFFFE, // disabledTextRGB
+                in -> 0x99808080, // backgroundRGB
+                true, //rounded
+                true, //swing
+                false, //boarder
+                in -> -12876693,
+                in -> -12876693,
+                in -> Utils.Client.otherAstolfoColorsDraw(in, 10)
+        ),
         PlusPlus( // name
                         true, false, true, true, // showGradientEnabled - showGradientDisabled - useCustomFont -
                         CNColor.STATIC, // just leave this
